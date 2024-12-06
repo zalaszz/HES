@@ -1,0 +1,11 @@
+# Visual Studio
+.vs/
+
+# Publish
+publish/
+
+# Other files
+packages/
+*/bin/
+*/obj/
+*/Properties/
