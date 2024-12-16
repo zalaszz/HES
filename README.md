@@ -2,6 +2,7 @@
 
 ![C#](https://img.shields.io/badge/language-C%23-blue.svg)
 ![Windows](https://img.shields.io/badge/platform-Windows-lightgrey.svg)
+![.NET](https://img.shields.io/badge/.NET-blue)
 
 ## Overview 🚀
 
@@ -14,7 +15,7 @@ This application simulates keystrokes using the SendInput function and the Win32
 Before you begin, make sure you have the following installed:
 
 - [Visual Studio](https://visualstudio.microsoft.com/) or another compatible C# code editor 💻
-- [.NET SDK](https://dotnet.microsoft.com/download) (specify the required version, e.g., .NET 6 or .NET 7) 🔧
+- [.NET SDK](https://dotnet.microsoft.com/download) (.NET 4.6.1) 🔧
 - Operating System: Windows 🖥️ (for other platforms, see the [Support for Other Platforms](#support-for-other-platforms) section).
 
 ---
