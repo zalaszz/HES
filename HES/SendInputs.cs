@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 /**
 * Author: Ricardo Silva
@@ -91,7 +93,7 @@ namespace HES
             for (int i = 0; i < keyCodes.GetVKObjects().Count; i++)
             {
                 //Console.WriteLine(
-                //    string.Format("[{0}, {1}, {2}, {3}]", (char)keyCodes.GetVKObject(i).GetKey(), 
+                //    string.Format("[{0}, {1}, {2}, {3}]", (char)keyCodes.GetVKObject(i).GetKey(),
                 //    keyCodes.GetVKObject(i).GetFlag(), keyCodes.GetVKObject(i).IsSpecialCharacter(), keyCodes.GetVKObject(i).IsUpperCase()
                 //));
 
@@ -140,7 +142,7 @@ namespace HES
             };
         }
 
-        public static uint KeyCombinationFlag(ushort vkcode)
+        private static uint KeyCombinationFlag(ushort vkcode)
         {
             uint flag = 0;
             foreach (var Vkey in IsModifierKeyPressed.ToList())

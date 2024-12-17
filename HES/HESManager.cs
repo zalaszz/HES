@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 /**
 * Author: Ricardo Silva
@@ -39,7 +41,13 @@ namespace HES
 
                     StartMultiThreadTask(); //Starts the task as multithread
 
-                    Console.Clear();
+                    //_INSTRUCTIONS.GetInstructions().ForEach(vk =>
+                    //{
+                    //    SendInputs.PressKey(vk);
+                    //    Thread.Sleep(500);
+                    //});
+
+                    //Console.Clear();
                 }
                 catch (Exception e)
                 {
@@ -55,7 +63,7 @@ namespace HES
         private void StartMultiThreadTask()
         {
             HESThreadPool<List<VKObjectContainer>> TPool =
-                new HESThreadPool<List<VKObjectContainer>>(2);
+                new HESThreadPool<List<VKObjectContainer>>(1);
 
             TPool.SetWorkLoad(_INSTRUCTIONS.GetInstructions());
             TPool.StartWork();
