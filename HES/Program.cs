@@ -16,7 +16,7 @@ namespace HES
         static void Main(string[] args)
         {
             //new HESManager("srptlxfishp101").Start();
-            new HESManager("notas").Start();
+            new HESManager("Notepad").Start();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace HES
     class HESThreadPool<T>
     {
         Thread[] workers;
-        private const int _SLEEPTIME = 500;
+        private const int _SLEEPTIME = 50;
         Object lockObj = new Object();
         private List<VKObjectContainer> data;
 
@@ -34,7 +34,7 @@ namespace HES
                 this.workers[i].Start();
             }
 
-            //LoadingMessage();
+            LoadingMessage();
         }
 
         private void LoadingMessage()
@@ -67,7 +67,6 @@ namespace HES
                     break;
 
                 SendInputs.PressKey(container);
-                container.GetVKObjects().ForEach(vk => Console.WriteLine((char)vk.GetKey()));
                 Task.Delay(_SLEEPTIME).Wait();
             }
         }

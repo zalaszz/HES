@@ -63,7 +63,7 @@ namespace HES
         private void StartMultiThreadTask()
         {
             HESThreadPool<List<VKObjectContainer>> TPool =
-                new HESThreadPool<List<VKObjectContainer>>(2);
+                new HESThreadPool<List<VKObjectContainer>>(1);
 
             TPool.SetWorkLoad(_INSTRUCTIONS.GetInstructions());
             TPool.StartWork();
