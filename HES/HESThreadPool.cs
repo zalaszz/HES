@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 /**
 * Author: Ricardo Silva
@@ -14,7 +15,7 @@ namespace HES
     class HESThreadPool<T>
     {
         Thread[] workers;
-        private const int _SLEEPTIME = 50;
+        private const int _SLEEPTIME = 500;
         Object lockObj = new Object();
         private List<VKObjectContainer> data;
 
@@ -27,23 +28,47 @@ namespace HES
         {
             for (int i = 0; i < workers.Length; i++)
             {
+                //workers[i] = Task.Run(() => Work());
                 this.workers[i] = new Thread(new ThreadStart(Work));
+                this.workers[i].Priority = ThreadPriority.Highest;
                 this.workers[i].Start();
             }
 
-            LoadingBar();
+            //LoadingMessage();
+        }
+
+        private void LoadingMessage()
+        {
+            if (data.Count > 150)
+            {
+                LoadingBar();
+                return;
+            }
+
+            HESConsole.Write("\nExecuting task...", ConsoleColor.DarkYellow);
         }
 
         private void Work()
         {
-            lock (lockObj)
+            while (true)
             {
-                while (data.Count > 0)
+                VKObjectContainer container = null;
+
+                lock (lockObj)
                 {
-                    SendInputs.PressKey(this.data.ElementAt(0));
-                    this.data.RemoveAt(0);
-                    Thread.Sleep(_SLEEPTIME);
+                    if (data.Count > 0)
+                    {
+                        container = data[0];
+                        this.data.RemoveAt(0);
+                    }
                 }
+
+                if (container == null)
+                    break;
+
+                SendInputs.PressKey(container);
+                container.GetVKObjects().ForEach(vk => Console.WriteLine((char)vk.GetKey()));
+                Task.Delay(_SLEEPTIME).Wait();
             }
         }
 
@@ -72,10 +97,6 @@ namespace HES
             int count = 0;
             int dataCount = data.Count;
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\nExecuting task...");
-            Console.ForegroundColor = ConsoleColor.White;
-
             for (int i = data.Count; i >= 0; i--)
             {
                 if ((i % percentagePerBar).Equals(percentageForEachTask))
@@ -89,19 +110,17 @@ namespace HES
 
                 if((i % 10).Equals(int.Parse(percentageForEachTask.ToString().Substring(percentageForEachTask.ToString().Length - 1))))
                     //progress = progress >= 100 ? 100 : progress + (0.093 * (100 / percentageForEachTask));
-                    progress = (count / (double)dataCount) * 100;
+                    progress = (count / (double)dataCount) * 100 > 99 ? 100 : (count / (double)dataCount) * 100;
 
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"\rProgress {bar} {progress.ToString("F2")}% | [{count}/{dataCount}]");
-                Console.ResetColor();
-
+                string displayProgress = $"\rProgress {bar} {progress.ToString("F2")}% | [{count}/{dataCount}]";
+                HESConsole.Write(displayProgress, ConsoleColor.Green);
                 count++;
                 
                 if (i.Equals(0))
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("\nComplete!");
-                    Console.ResetColor();
+                    HESConsole.Write("\n[", ConsoleColor.Green, ConsoleColor.White);
+                    HESConsole.Write("COMPLETE", ConsoleColor.Green, ConsoleColor.White, alignSize: displayProgress.Length - "COMPLETE".Length - 2);
+                    HESConsole.Write("]", ConsoleColor.Green, ConsoleColor.White, alignSize: displayProgress.Length);
                     Console.ReadKey();
                 }
 

@@ -8,4 +8,4 @@ publish/
 packages/
 */bin/
 */obj/
-*/Properties/
+# */Properties/

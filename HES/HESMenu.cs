@@ -76,16 +76,16 @@ namespace HES
 
             HESConsole.Write("Built with ", "love", " by zalasz\n", ConsoleColor.DarkRed, alignSize: 80);
 
-            HESConsole.Write("Github ", "https://github.com/zalaszz", "\n\n", ConsoleColor.Cyan, alignSize: 80);
+            HESConsole.Write("Source code (git repo) ", "https://github.com/zalaszz/HES", "\n\n", ConsoleColor.Cyan, alignSize: 80);
         }
 
         private void CSVFileMenu()
         {
             HESConsole.Write("---> [", "Data File Detected - Reading data", "] <---\n\n", ConsoleColor.Green, alignSize: 80);
 
-            SetDataFields(_hESFile.ReadCsvData());
-
             ProfileLogin();
+            
+            SetDataFields(_hESFile.ReadCsvData());
         }
 
         public void SetDataFields(List<string> data)
