@@ -16,7 +16,7 @@
     <AssemblyVersion>1.0.*</AssemblyVersion>
     <FileVersion>1.0.*</FileVersion>
     <Deterministic>false</Deterministic>
-    <PublishUrl>C:\Users\RLSilva\source\repos\HES\HES\publish\</PublishUrl>
+    <PublishUrl>C:\Users\Ricardo\Downloads\HES-1.2.7.10\HES\HES\publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -122,13 +122,13 @@
     <Compile Include="HESMenu.cs" />
     <Compile Include="HESThreadPool.cs" />
     <Compile Include="HESWindow.cs" />
-    <Compile Include="Instruction.cs" />
+    <Compile Include="InputHandling\Instruction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SendInputs.cs" />
-    <Compile Include="VirtualKeys.cs" />
-    <Compile Include="VKObject.cs" />
-    <Compile Include="VKObjectContainer.cs" />
+    <Compile Include="InputHandling\SendInputs.cs" />
+    <Compile Include="InputHandling\VirtualKeys.cs" />
+    <Compile Include="InputHandling\VKObject.cs" />
+    <Compile Include="InputHandling\VKObjectContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -136,7 +136,7 @@
     </None>
     <None Include="HES_TemporaryKey.pfx" />
     <None Include="packages.config" />
-    <Content Include="settings.json">
+    <Content Include="Resources\settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

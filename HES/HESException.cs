@@ -1,9 +1,10 @@
 ﻿using Figgle;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+/**
+* Author: Ricardo Silva
+* Date: 22-11-2024 
+*/
 
 namespace HES
 {

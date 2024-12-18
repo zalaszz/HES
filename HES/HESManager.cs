@@ -1,9 +1,5 @@
-﻿using Figgle;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 /**
 * Author: Ricardo Silva
@@ -47,7 +43,7 @@ namespace HES
                     //    Thread.Sleep(500);
                     //});
 
-                    //Console.Clear();
+                    Console.Clear();
                 }
                 catch (Exception e)
                 {

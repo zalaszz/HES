@@ -76,7 +76,7 @@ namespace HES
         private static Dictionary<char, VK_CODE> SpecialShiftChars = new Dictionary<char, VK_CODE>();
         private static Dictionary<char, VK_CODE> SpecialAltChars = new Dictionary<char, VK_CODE>();
 
-        private const string _SETTINGSFILENAME = "settings.json";
+        private const string _SETTINGSFILENAME = "Resources/settings.json";
 
         public VirtualKeys()
         {

@@ -1,11 +1,13 @@
 ﻿using Figgle;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
+
+/**
+* Author: Ricardo Silva
+* Date: 22-11-2024 
+*/
 
 namespace HES
 {

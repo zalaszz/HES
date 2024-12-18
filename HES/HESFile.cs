@@ -4,6 +4,11 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 
+/**
+* Author: Ricardo Silva
+* Date: 22-11-2024 
+*/
+
 namespace HES
 {
     public class HESFile
@@ -73,7 +78,7 @@ namespace HES
             }
             finally
             {
-                //File.Move($"{GetInFullPath()}data.csv", $"{GetOutFullPath()}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
+                File.Move($"{GetInFullPath()}data.csv", $"{GetOutFullPath()}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
             }
 
             return csvData;
