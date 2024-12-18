@@ -11,20 +11,11 @@ using System.Linq;
 
 namespace HES
 {
-    public class HESFile
+    public static class HESFile
     {
-        private string _FILENAME;
-        private const string _DIR_IN = @"\in\";
-        private const string _DIR_OUT = @"\out\";
-        public HESFile(string fileName)
+        public static Dictionary<string, Dictionary<char, VK_CODE>> ReadSettings(string file)
         {
-            _FILENAME = fileName;
-            CreateDirsIfRequired();
-        }
-
-        public Dictionary<string, Dictionary<char, VK_CODE>> ReadSettings()
-        {
-            string data = File.ReadAllText(_FILENAME);
+            string data = File.ReadAllText(file);
             var dataJson = JsonSerializer.Deserialize<Dictionary<string, Dictionary<char, string>>>(data);
 
             Dictionary<string, Dictionary<char, VK_CODE>> dataJsonConverted = new Dictionary<string, Dictionary<char, VK_CODE>>();
@@ -44,12 +35,12 @@ namespace HES
             return dataJsonConverted;
         }
 
-        public List<string> ReadCsvData()
+        public static List<string> ReadCsvData(string path)
         {
             List<string> csvData = new List<string>() { string.Empty, string.Empty, string.Empty };
             try
             {
-                using (StreamReader reader = new StreamReader($"{GetInFullPath()}{_FILENAME}"))
+                using (StreamReader reader = new StreamReader(path))
                 {
                     while (!reader.EndOfStream)
                     {
@@ -78,41 +69,31 @@ namespace HES
             }
             finally
             {
-                File.Move($"{GetInFullPath()}data.csv", $"{GetOutFullPath()}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
+                File.Move($"{CreateDirIfRequired(@"\in\")}data.csv", $"{CreateDirIfRequired(@"\out\")}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
             }
 
             return csvData;
         }
 
-        private void CreateDirsIfRequired()
+        public static string CreateDirIfRequired(string path)
         {
-            if (!HasInDir()) Directory.CreateDirectory(GetInFullPath());
-            if (!HasOutDir()) Directory.CreateDirectory(GetOutFullPath());
+            if (!HasDir(path)) Directory.CreateDirectory(GetPath() + path);
+            return GetPath() + path;
         }
 
-        public bool HasInDir()
+        public static bool HasDir(string path)
         {
-            return Directory.Exists(GetInFullPath());
+            return Directory.Exists(GetPath() + path);
         }
 
-        public bool HasOutDir()
+        public static bool HasFile(string file)
         {
-            return Directory.Exists(GetOutFullPath());
+            return File.Exists(file);
         }
 
-        public bool HasFile()
+        public static string GetPath()
         {
-            return _FILENAME.Contains(".csv") ? File.Exists($"{GetInFullPath()}{_FILENAME}") : File.Exists($"{_FILENAME}");
-        }
-
-        public string GetInFullPath()
-        {
-            return Directory.GetCurrentDirectory() + _DIR_IN;
-        }
-
-        public string GetOutFullPath()
-        {
-            return Directory.GetCurrentDirectory() + _DIR_OUT;
+            return Directory.GetCurrentDirectory();
         }
     }
 }

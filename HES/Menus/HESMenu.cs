@@ -13,36 +13,23 @@ namespace HES
 {
     class HESMenu
     {
-        private Dictionary<string, string> _fields = new Dictionary<string, string>() {
-            { "Username", "" },
-            { "Password", "" },
-            { "Cifs", "" },
-            { "Start Date", "" },
-            { "End Date", "" },
-        };
-
-        public delegate void InterceptUserKeystrokesImpl(ref string data, ConsoleKeyInfo key);
-        private const string _DATAFILENAME = "data.csv";
         private const string _BANNERSTRING = "HES";
-        private HESFile _hESFile;
+        public delegate void InterceptUserKeystrokesImpl(ref string data, ConsoleKeyInfo key);
+        protected Dictionary<string, string> fields = new Dictionary<string, string>();
 
-        public HESMenu()
+
+        public HESMenu(params string[] fieldKeys)
         {
-            _hESFile = new HESFile(_DATAFILENAME);
+            foreach (var key in fieldKeys)
+            {
+                fields.Add(key, "");
+            }
         }
 
-        public void Start()
+        public virtual void Start()
         {
             Banner();
             Header();
-
-            if (_hESFile.HasInDir() && _hESFile.HasFile())
-            {
-                CSVFileMenu();
-                return;
-            }
-
-            DefaultMenu();
         }
 
         private void Banner()
@@ -75,70 +62,32 @@ namespace HES
 
             HESConsole.Write("Product Name: ", productName, " — ", ConsoleColor.Blue, alignSize: 80, stringLength: fullString.Length);
             HESConsole.Write("Version: ", version, " \n", ConsoleColor.DarkYellow);
-
             HESConsole.Write("Built with ", "love", " by zalasz\n", ConsoleColor.DarkRed, alignSize: 80);
-
             HESConsole.Write("Source code (git repo) ", "https://github.com/zalaszz/HES", "\n\n", ConsoleColor.Cyan, alignSize: 80);
         }
 
-        private void CSVFileMenu()
+        protected void PrintFieldsToConsole()
         {
-            HESConsole.Write("---> [", "Data File Detected - Reading data", "] <---\n\n", ConsoleColor.Green, alignSize: 80);
-
-            ProfileLogin();
-            
-            SetDataFields(_hESFile.ReadCsvData());
-        }
-
-        public void SetDataFields(List<string> data)
-        {
-            for (int i = 2; i < _fields.Count; i++) // Starting from number 2 because we don't want to set the login fields
+            for (int i = 0; i < fields.Count; i++)
             {
-                _fields[_fields.ElementAt(i).Key] = data[i - 2]; // Minus 2 so we can start from the beginning of the list
-            }
-        }
-
-        private void ProfileLogin()
-        {
-            for (int i = 0; i < 2; i++) // Less than 2 because we only have 2 fields for the login User and Password
-            {
-                HESConsole.Write(String.Format("{0}", _fields.ElementAt(i).Key.ToLower()), ConsoleColor.Magenta);
+                HESConsole.Write(String.Format("{0}", fields.ElementAt(i).Key.ToLower()), ConsoleColor.Magenta);
                 HESConsole.Write("> ", ConsoleColor.Cyan);
-                if (_fields.ElementAt(i).Key.Contains("assword")) // Removing the 'P' from the word "Password" so it can identify with either 'p' or 'P'
+                if (fields.ElementAt(i).Key.Contains("Date"))
                 {
-                    _fields[_fields.ElementAt(i).Key] = InterceptUserKeystrokes(HidePasswordCredentialsImpl);
-                    Console.Write("\n");
-                    break;
-                }
-
-                _fields[_fields.ElementAt(i).Key] = Console.ReadLine();
-            }
-        }
-
-        private void DefaultMenu()
-        {
-            ProfileLogin();
-
-            for (int i = 2; i < _fields.Count; i++)
-            {
-                HESConsole.Write(String.Format("{0}", _fields.ElementAt(i).Key.ToLower()), ConsoleColor.Magenta);
-                HESConsole.Write("> ", ConsoleColor.Cyan);
-                if (_fields.ElementAt(i).Key.Contains("Date"))
-                {
-                    _fields[_fields.ElementAt(i).Key] = InterceptUserKeystrokes(TtoCurrentDateImpl);
+                    fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(TtoCurrentDateImpl);
                     Console.Write("\n");
                 }
-                else if (_fields.ElementAt(i).Key.Contains("Cifs"))
+                else if (fields.ElementAt(i).Key.Contains("Cifs"))
                 {
-                    _fields[_fields.ElementAt(i).Key] = InterceptUserKeystrokes(AllowOnlyNumbersImpl);
+                    fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(AllowOnlyNumbersImpl);
                     Console.Write("\n");
                 }
                 else
-                    _fields[_fields.ElementAt(i).Key] = Console.ReadLine();
+                    fields[fields.ElementAt(i).Key] = Console.ReadLine();
             }
         }
 
-        private string InterceptUserKeystrokes(InterceptUserKeystrokesImpl implementation)
+        protected string InterceptUserKeystrokes(InterceptUserKeystrokesImpl implementation)
         {
             string data = "";
             while (true)
@@ -154,7 +103,7 @@ namespace HES
             return data;
         }
 
-        private void HidePasswordCredentialsImpl(ref string data, ConsoleKeyInfo key)
+        protected void HidePasswordCredentialsImpl(ref string data, ConsoleKeyInfo key)
         {
             if (key.Key.Equals(ConsoleKey.Backspace) && data.Length > 0)
             {
@@ -164,7 +113,7 @@ namespace HES
                 data += key.KeyChar;
         }
 
-        private void TtoCurrentDateImpl(ref string data, ConsoleKeyInfo key)
+        protected void TtoCurrentDateImpl(ref string data, ConsoleKeyInfo key)
         {
             if (key.Key.Equals(ConsoleKey.Backspace) && data.Length > 0)
             {
@@ -183,7 +132,7 @@ namespace HES
             }
         }
 
-        private void AllowOnlyNumbersImpl(ref string data, ConsoleKeyInfo key)
+        protected void AllowOnlyNumbersImpl(ref string data, ConsoleKeyInfo key)
         {
             if (key.Key.Equals(ConsoleKey.Backspace) && data.Length > 0)
             {
@@ -195,11 +144,6 @@ namespace HES
                 data += key.KeyChar;
                 Console.Write(key.KeyChar);
             }
-        }
-
-        public Dictionary<string, string> GetFields()
-        {
-            return _fields;
         }
     }
 }

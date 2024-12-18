@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HES.Interfaces;
+using System.Collections.Generic;
 
 /**
 * Author: Ricardo Silva
@@ -7,14 +8,16 @@
 
 namespace HES
 {
-    class Instruction
+    class Instruction : IResourceProvider
     {
         private List<VKObjectContainer> finalInstructions = new List<VKObjectContainer>();
         private string[] cifs;
         private string[] startDates;
         private string[] endDates;
 
-        public Instruction(HESFile fileVKs) { }
+        private const string _RESOURCE = @"\Resources\instructions.json";
+
+        public Instruction() { }
 
         public void SetInstructions(Dictionary<string, string> instructions)
         {
@@ -76,6 +79,11 @@ namespace HES
         public void Clear()
         {
             finalInstructions.Clear();
+        }
+
+        public void GetResource()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

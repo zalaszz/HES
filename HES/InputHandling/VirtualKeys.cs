@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HES.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -70,32 +71,13 @@ namespace HES
         F11 = 0x7A,
     }
 
-    public class VirtualKeys
+    public class VirtualKeys : IResourceProvider
     {
         private static Dictionary<char, VK_CODE> SpecialChars = new Dictionary<char, VK_CODE>();
         private static Dictionary<char, VK_CODE> SpecialShiftChars = new Dictionary<char, VK_CODE>();
         private static Dictionary<char, VK_CODE> SpecialAltChars = new Dictionary<char, VK_CODE>();
 
-        private const string _SETTINGSFILENAME = "Resources/settings.json";
-
-        public VirtualKeys()
-        {
-            StartVirtualKeys(new HESFile(_SETTINGSFILENAME));
-        }
-
-        private void StartVirtualKeys(HESFile fileVKs)
-        {
-            try
-            {
-                SpecialChars = fileVKs.ReadSettings()["SpecialChars"];
-                SpecialShiftChars = fileVKs.ReadSettings()["SpecialShiftChars"];
-                SpecialAltChars = fileVKs.ReadSettings()["SpecialAltChars"];
-            }
-            catch(Exception e)
-            {
-                new HESException("Settings file could not be loaded, HES might not work as expected...", e);
-            }
-        }
+        private const string _RESOURCE = @"\Resources\settings.json";
 
         public static VKObjectContainer SetVKs<T>(T instruction, VK_CODE flag)
         {
@@ -188,6 +170,22 @@ namespace HES
             return vkcodes
                 .Select(vkcode => (ushort)vkcode)
                 .ToList();
+        }
+
+        public void GetResource()
+        {
+            try
+            {
+                Dictionary<string, Dictionary<char, VK_CODE>> resources = HESFile.ReadSettings(_RESOURCE);
+
+                SpecialChars = resources["SpecialChars"];
+                SpecialShiftChars = resources["SpecialShiftChars"];
+                SpecialAltChars = resources["SpecialAltChars"];
+            }
+            catch (Exception e)
+            {
+                new HESException("Settings file could not be loaded, HES might not work as expected...", e);
+            }
         }
     }
 }

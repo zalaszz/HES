@@ -13,14 +13,12 @@ namespace HES
         private HESMenu _MENU;
         private HESWindow _WINDOW;
         private Instruction _INSTRUCTIONS;
-        private const string _INSTRUCTIONSFILENAME = "instructions.json";
 
         public HESManager(string windowName = "HES")
         {
             _MENU = new HESMenu();
             _WINDOW = new HESWindow(windowName);
-            _INSTRUCTIONS = new Instruction(new HESFile(_INSTRUCTIONSFILENAME));
-            new VirtualKeys();
+            _INSTRUCTIONS = new Instruction();
         }
 
         public void Start()
