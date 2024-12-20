@@ -9,8 +9,6 @@ namespace HES.Menus
     class MainMenu : HESMenu, IResourceProvider
     {
         private const string _RESOURCE = @"data.csv";
-        private const string _RESOURCE_IN_DIR = @"\in\";
-        private const string _RESOURCE_OUT_DIR = @"\out\";
 
         public MainMenu():base("Username", "Password", "Cifs", "Start Date", "End Date") { }
 
@@ -18,7 +16,9 @@ namespace HES.Menus
         {
             base.Start();
 
-            if (HESFile.HasDir(_RESOURCE_IN_DIR) && HESFile.HasFile(_RESOURCE_IN_DIR + _RESOURCE))
+            HESFile.CreateDefaultDirsIfRequired();
+
+            if (HESFile.HasFile())
             {
                 CSVFileMenu();
                 return;
@@ -89,14 +89,10 @@ namespace HES.Menus
 
         public void GetResource()
         {
-            if (!HESFile.HasDir(_RESOURCE_IN_DIR) && !HESFile.HasFile(_RESOURCE_IN_DIR + _RESOURCE))
-            {
-                HESFile.CreateDirIfRequired(_RESOURCE_IN_DIR);
-                HESFile.CreateDirIfRequired(_RESOURCE_OUT_DIR);
-                return;
-            }
+            HESFile.CreateDefaultDirsIfRequired();
+            if (!HESFile.HasFile()) return;
 
-            SetAdditionalFieldsValues(HESFile.ReadCsvData(HESFile.GetPath() + _RESOURCE));
+            SetAdditionalFieldsValues(HESFile.ReadCSV(_RESOURCE));
         }
     }
 }

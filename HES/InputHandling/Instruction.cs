@@ -11,9 +11,7 @@ namespace HES
     class Instruction : IResourceProvider
     {
         private List<VKObjectContainer> finalInstructions = new List<VKObjectContainer>();
-        private string[] cifs;
-        private string[] startDates;
-        private string[] endDates;
+        private string[] cifs, startDates, endDates;
 
         private const string _RESOURCE = @"\Resources\instructions.json";
 
@@ -83,7 +81,7 @@ namespace HES
 
         public void GetResource()
         {
-            throw new System.NotImplementedException();
+            System.Console.WriteLine("BOMBOCLAAAAT");
         }
     }
 }

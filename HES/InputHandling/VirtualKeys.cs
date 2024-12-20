@@ -73,9 +73,7 @@ namespace HES
 
     public class VirtualKeys : IResourceProvider
     {
-        private static Dictionary<char, VK_CODE> SpecialChars = new Dictionary<char, VK_CODE>();
-        private static Dictionary<char, VK_CODE> SpecialShiftChars = new Dictionary<char, VK_CODE>();
-        private static Dictionary<char, VK_CODE> SpecialAltChars = new Dictionary<char, VK_CODE>();
+        private static Dictionary<char, VK_CODE> SpecialChars, SpecialShiftChars, SpecialAltChars = new Dictionary<char, VK_CODE>();
 
         private const string _RESOURCE = @"\Resources\settings.json";
 

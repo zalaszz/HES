@@ -3,6 +3,7 @@ using System;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
+using HES.Models;
 
 /**
 * Author: Ricardo Silva
@@ -13,9 +14,17 @@ namespace HES
 {
     public static class HESFile
     {
+        private const string _DEFAULT_IN_DIR = @"\in\";
+        private const string _DEFAULT_OUT_DIR = @"\out\";
+
+        public static void ReadJSON()
+        {
+
+        }
+
         public static Dictionary<string, Dictionary<char, VK_CODE>> ReadSettings(string file)
         {
-            string data = File.ReadAllText(file);
+            string data = File.ReadAllText(GetPath() + file);
             var dataJson = JsonSerializer.Deserialize<Dictionary<string, Dictionary<char, string>>>(data);
 
             Dictionary<string, Dictionary<char, VK_CODE>> dataJsonConverted = new Dictionary<string, Dictionary<char, VK_CODE>>();
@@ -35,12 +44,17 @@ namespace HES
             return dataJsonConverted;
         }
 
-        public static List<string> ReadCsvData(string path)
+        public static List<string> ReadCSV(string file)
+        {
+            return ReadCSV(file, $@"{GetPath() + _DEFAULT_IN_DIR}", $@"{GetPath() + _DEFAULT_OUT_DIR}");
+        }
+
+        public static List<string> ReadCSV(string file, string inPath, string outPath)
         {
             List<string> csvData = new List<string>() { string.Empty, string.Empty, string.Empty };
             try
             {
-                using (StreamReader reader = new StreamReader(path))
+                using (StreamReader reader = new StreamReader(inPath + file))
                 {
                     while (!reader.EndOfStream)
                     {
@@ -69,16 +83,26 @@ namespace HES
             }
             finally
             {
-                File.Move($"{CreateDirIfRequired(@"\in\")}data.csv", $"{CreateDirIfRequired(@"\out\")}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
+                File.Move($"{inPath + file}", $"{outPath}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
             }
 
             return csvData;
         }
 
-        public static string CreateDirIfRequired(string path)
+        public static void CreateDefaultDirsIfRequired()
+        {
+            CreateDirIfRequired(_DEFAULT_IN_DIR);
+            CreateDirIfRequired(_DEFAULT_OUT_DIR);
+        }
+
+        public static void CreateDirIfRequired(string path)
         {
             if (!HasDir(path)) Directory.CreateDirectory(GetPath() + path);
-            return GetPath() + path;
+        }
+
+        public static bool HasDefaultDirs()
+        {
+            return HasDir(_DEFAULT_IN_DIR) && HasDir(_DEFAULT_OUT_DIR);
         }
 
         public static bool HasDir(string path)
@@ -86,9 +110,14 @@ namespace HES
             return Directory.Exists(GetPath() + path);
         }
 
+        public static bool HasFile()
+        {
+            return Directory.GetFiles(GetPath() + _DEFAULT_IN_DIR, "*.csv").Count().Equals(0) ? false : true;
+        }
+
         public static bool HasFile(string file)
         {
-            return File.Exists(file);
+            return File.Exists(GetPath() + file);
         }
 
         public static string GetPath()

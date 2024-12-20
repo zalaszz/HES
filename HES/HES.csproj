@@ -121,11 +121,14 @@
     <Compile Include="Common\HESConsole.cs" />
     <Compile Include="Common\HESException.cs" />
     <Compile Include="Common\HESFile.cs" />
+    <Compile Include="Common\ResourceLoader.cs" />
     <Compile Include="Interfaces\IResourceProvider.cs" />
     <Compile Include="Manager\HESManager.cs" />
     <Compile Include="Menus\HESMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Menus\WindowMenu.cs" />
+    <Compile Include="Models\SettingDTO.cs" />
+    <Compile Include="Models\MenuDTO.cs" />
     <Compile Include="Threading\HESThreadPool.cs" />
     <Compile Include="Window\HESWindow.cs" />
     <Compile Include="InputHandling\Instruction.cs" />
@@ -144,7 +147,9 @@
     <Content Include="Resources\settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\menu.json" />
+    <Content Include="Resources\menu.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -159,10 +164,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\extract.ico" />
+    <Content Include="Resources\extract.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

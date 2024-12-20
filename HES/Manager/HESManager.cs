@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HES.Common;
+using HES.Menus;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,21 +13,20 @@ namespace HES
 {
     class HESManager
     {
-        private HESMenu _MENU;
+        private MainMenu _MENU;
         private HESWindow _WINDOW;
         private Instruction _INSTRUCTIONS;
 
         public HESManager(string windowName = "HES")
         {
-            _MENU = new HESMenu();
+            _MENU = new MainMenu();
             _WINDOW = new HESWindow(windowName);
             _INSTRUCTIONS = new Instruction();
         }
 
         public void Start()
         {
-            //LoadResources().Wait();
-            Task.Run(async () => await LoadResourcesAsync());
+            Task.Run(async () => await ResourceLoader.LoadResourcesAsync());
 
             while (true)
             {
@@ -33,7 +34,7 @@ namespace HES
                 {
                     _MENU.Start();
 
-                    //_INSTRUCTIONS.SetInstructions(_MENU.GetFields()); //Sets the data the user typed
+                    _INSTRUCTIONS.SetInstructions(_MENU.GetFields()); //Sets the data the user typed
 
                     _WINDOW.GetTargetWindow(); //Gets the window that contains the windowName string
 
@@ -50,11 +51,6 @@ namespace HES
                     _INSTRUCTIONS.Clear();
                 }
             }
-        }
-
-        private async Task LoadResourcesAsync()
-        {
-            await Task.Delay(5000);
         }
 
         private void StartMultiThreadTask()
