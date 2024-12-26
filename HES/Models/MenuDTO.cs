@@ -4,7 +4,7 @@ namespace HES.Models
 {
     class MenuDTO
     {
-        public Dictionary<string, string> LoginFields { get; set; }
-        public Dictionary<string, string> AdditionalFields { get; set; }
+        public List<Dictionary<string, string>> LoginFields { get; set; }
+        public List<Dictionary<string, string>> AdditionalFields { get; set; }
     }
 }

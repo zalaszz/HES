@@ -81,7 +81,7 @@ namespace HES
 
         public void GetResource()
         {
-            System.Console.WriteLine("BOMBOCLAAAAT");
+            
         }
     }
 }

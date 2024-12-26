@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using HES.Models;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 /**
 * Author: Ricardo Silva
@@ -17,31 +19,20 @@ namespace HES
         private const string _DEFAULT_IN_DIR = @"\in\";
         private const string _DEFAULT_OUT_DIR = @"\out\";
 
-        public static void ReadJSON()
+        public static object ReadFromFile<T>(string file)
         {
+            if (file.Contains(".csv") && typeof(T).Equals(typeof(List<string>)))
+                return ReadCSV(file);
 
+            return ReadJSON<T>(file);
         }
 
-        public static Dictionary<string, Dictionary<char, VK_CODE>> ReadSettings(string file)
+        private static T ReadJSON<T>(string file)
         {
             string data = File.ReadAllText(GetPath() + file);
-            var dataJson = JsonSerializer.Deserialize<Dictionary<string, Dictionary<char, string>>>(data);
+            T dataJson = JsonSerializer.Deserialize<T>(data);
 
-            Dictionary<string, Dictionary<char, VK_CODE>> dataJsonConverted = new Dictionary<string, Dictionary<char, VK_CODE>>();
-
-            foreach (var item in dataJson)
-            {
-                Dictionary<char, VK_CODE> subDictionary = new Dictionary<char, VK_CODE>();
-
-                foreach (var subItem in item.Value)
-                {
-                    subDictionary.Add(subItem.Key, (VK_CODE)Enum.Parse(typeof(VK_CODE), subItem.Value));
-                }
-
-                dataJsonConverted.Add(item.Key, subDictionary);
-            }
-
-            return dataJsonConverted;
+            return dataJson;
         }
 
         public static List<string> ReadCSV(string file)

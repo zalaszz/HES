@@ -1,7 +1,9 @@
 ﻿using HES.Interfaces;
+using HES.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 /**
 * Author: Ricardo Silva
@@ -174,11 +176,16 @@ namespace HES
         {
             try
             {
-                Dictionary<string, Dictionary<char, VK_CODE>> resources = HESFile.ReadSettings(_RESOURCE);
+                SettingDTO dto = (SettingDTO)HESFile.ReadFromFile<SettingDTO>(_RESOURCE);
 
-                SpecialChars = resources["SpecialChars"];
-                SpecialShiftChars = resources["SpecialShiftChars"];
-                SpecialAltChars = resources["SpecialAltChars"];
+                //Dictionary<string, Dictionary<string, VK_CODE>> resources = element
+                //    .EnumerateObject()
+                //    .ToDictionary(node => node.Name, node => node.Value.EnumerateObject()
+                //    .ToDictionary(childNode => childNode.Name, childNode => (VK_CODE)Enum.Parse(typeof(VK_CODE), childNode.Value.ToString())));
+
+                SpecialChars = dto.SpecialChars;
+                SpecialShiftChars = dto.SpecialShiftChars;
+                SpecialAltChars = dto.SpecialAltChars;
             }
             catch (Exception e)
             {

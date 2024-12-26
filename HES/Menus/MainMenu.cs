@@ -51,14 +51,6 @@ namespace HES.Menus
             }
         }
 
-        public void SetAdditionalFieldsValues(List<string> data)
-        {
-            for (int i = 2; i < fields.Count; i++) // Starting from number 2 because we don't want to set the login fields
-            {
-                fields[fields.ElementAt(i).Key] = data[i - 2]; // Minus 2 so we can start from the beginning of the list
-            }
-        }
-
         private void DefaultMenu()
         {
             ProfileLogin();
@@ -80,11 +72,6 @@ namespace HES.Menus
                 else
                     fields[fields.ElementAt(i).Key] = Console.ReadLine();
             }
-        }
-
-        public Dictionary<string, string> GetFields()
-        {
-            return fields;
         }
 
         public void GetResource()
