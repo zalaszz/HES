@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -9,23 +10,18 @@ namespace HES.Converters
     {
         public override Dictionary<char, VK_CODE> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var dictionary = new Dictionary<char, VK_CODE>();
+            Dictionary<char, VK_CODE> dictionary;
 
             using (JsonDocument doc = JsonDocument.ParseValue(ref reader))
             {
-                foreach (var property in doc.RootElement.EnumerateObject())
-                {
-                    VK_CODE value = (VK_CODE)Enum.Parse(typeof(VK_CODE), property.Value.ToString());
-                    dictionary.Add(char.Parse(property.Name), value);
-                }
+                dictionary = doc.RootElement
+                       .EnumerateObject()
+                       .ToDictionary(childNode => char.Parse(childNode.Name), childNode => (VK_CODE)Enum.Parse(typeof(VK_CODE), childNode.Value.ToString()));
             }
 
             return dictionary;
         }
 
-        public override void Write(Utf8JsonWriter writer, Dictionary<char, VK_CODE> value, JsonSerializerOptions options)
-        {
-            
-        }
+        public override void Write(Utf8JsonWriter writer, Dictionary<char, VK_CODE> value, JsonSerializerOptions options) { }
     }
 }

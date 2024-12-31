@@ -176,12 +176,7 @@ namespace HES
         {
             try
             {
-                SettingDTO dto = (SettingDTO)HESFile.ReadFromFile<SettingDTO>(_RESOURCE);
-
-                //Dictionary<string, Dictionary<string, VK_CODE>> resources = element
-                //    .EnumerateObject()
-                //    .ToDictionary(node => node.Name, node => node.Value.EnumerateObject()
-                //    .ToDictionary(childNode => childNode.Name, childNode => (VK_CODE)Enum.Parse(typeof(VK_CODE), childNode.Value.ToString())));
+                SettingDTO dto = HESFile.ReadFromFile<SettingDTO>(_RESOURCE);
 
                 SpecialChars = dto.SpecialChars;
                 SpecialShiftChars = dto.SpecialShiftChars;

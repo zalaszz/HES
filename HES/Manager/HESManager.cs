@@ -13,13 +13,15 @@ namespace HES
 {
     class HESManager
     {
-        private MainMenu _MENU;
+        private MainMenu _MAINMENU;
+        private WindowMenu _WINDOWMENU;
         private HESWindow _WINDOW;
         private Instruction _INSTRUCTIONS;
 
         public HESManager(string windowName = "HES")
         {
-            _MENU = new MainMenu();
+            _MAINMENU = new MainMenu();
+            _WINDOWMENU = new WindowMenu();
             _WINDOW = new HESWindow(windowName);
             _INSTRUCTIONS = new Instruction();
         }
@@ -32,11 +34,13 @@ namespace HES
             {
                 try
                 {
-                    _MENU.Start();
+                    _WINDOWMENU.Start();
 
-                    _INSTRUCTIONS.SetInstructions(_MENU.GetFields()); //Sets the data the user typed
+                    _MAINMENU.Start();
 
-                    _WINDOW.GetTargetWindow(); //Gets the window that contains the windowName string
+                    _INSTRUCTIONS.SetInstructions(_MAINMENU.GetAllFields()); //Sets the data the user typed
+
+                    _WINDOW.GetWindow(_WINDOWMENU.GetWindowHandlerFromUserInput()); //Gets the window that contains the windowName string
 
                     StartMultiThreadTask(); //Starts the task as multithread
 

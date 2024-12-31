@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -17,10 +18,10 @@ namespace HES
         /* Enumerar as windows */
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, int lParam);
+        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, int lParam);
         /* Conseguir o titulo da window */
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
         /* Definir janela como ativa */
         [DllImport("user32.dll")]
         static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -28,7 +29,7 @@ namespace HES
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        public delegate bool EnumWindowsProc(int hwd, int lParam);
+        private delegate bool EnumWindowsProc(int hwd, int lParam);
 
         private const int SW_NORMAL = 1;
         private string _WINDOWNAME;
@@ -36,27 +37,33 @@ namespace HES
         public HESWindow(string windowName)
         {
             _WINDOWNAME = windowName;
-            HESDefaultSettings();
+            HESDefaultWindowSettings();
         }
 
-        public void GetTargetWindow()
+        public void GetWindow(int hwd)
         {
+            ShowWindow(new IntPtr(hwd), SW_NORMAL); // Restore window
+            SetForegroundWindow(new IntPtr(hwd)); // Focus window            
+            Thread.Sleep(250);
+        }
+
+        public static Dictionary<int, StringBuilder> GetAllWindows()
+        {
+            Dictionary<int, StringBuilder> windows = new Dictionary<int, StringBuilder>();
             EnumWindows((int hwd, int lPAram) =>
             {
                 StringBuilder sb = new StringBuilder(1024);
                 GetWindowText(new IntPtr(hwd), sb, sb.Capacity);
-                if (sb.ToString().Contains(_WINDOWNAME))
+                if (sb.ToString().Length > 0)
                 {
-                    ShowWindow(new IntPtr(hwd), SW_NORMAL); // Restaurar a window
-                    SetForegroundWindow(new IntPtr(hwd)); // Focar window
+                    windows.Add(hwd, sb);
                 }
                 return true;
             }, 0);
-
-            Thread.Sleep(250);
+            return windows;
         }
 
-        public void HESDefaultSettings()
+        public void HESDefaultWindowSettings()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);

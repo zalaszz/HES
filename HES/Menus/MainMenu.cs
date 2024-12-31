@@ -8,7 +8,7 @@ namespace HES.Menus
 {
     class MainMenu : HESMenu, IResourceProvider
     {
-        private const string _RESOURCE = @"data.csv";
+        private const string _RESOURCE = @"*.csv";
 
         public MainMenu():base("Username", "Password", "Cifs", "Start Date", "End Date") { }
 
@@ -79,7 +79,7 @@ namespace HES.Menus
             HESFile.CreateDefaultDirsIfRequired();
             if (!HESFile.HasFile()) return;
 
-            SetAdditionalFieldsValues(HESFile.ReadCSV(_RESOURCE));
+            SetAdditionalFieldsValues(HESFile.ReadFromFile<List<string>>(_RESOURCE));
         }
     }
 }

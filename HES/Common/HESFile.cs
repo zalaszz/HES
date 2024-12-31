@@ -4,8 +4,6 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using HES.Models;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 
 /**
 * Author: Ricardo Silva
@@ -19,33 +17,25 @@ namespace HES
         private const string _DEFAULT_IN_DIR = @"\in\";
         private const string _DEFAULT_OUT_DIR = @"\out\";
 
-        public static object ReadFromFile<T>(string file)
+        public static T ReadFromFile<T>(string file)
         {
-            if (file.Contains(".csv") && typeof(T).Equals(typeof(List<string>)))
-                return ReadCSV(file);
+            if (file.Contains(".csv") && typeof(T).Equals(typeof(List<string>))) return (T)ReadCSV(file);
+            if (file.Contains(".json") && typeof(T).IsSubclassOf(typeof(HESDTO))) return ReadJSON<T>(file);
 
-            return ReadJSON<T>(file);
+            throw new HESException("Only List<string> and HESDTOs types can be passed into ReadFromFile() method...");
         }
 
-        private static T ReadJSON<T>(string file)
-        {
-            string data = File.ReadAllText(GetPath() + file);
-            T dataJson = JsonSerializer.Deserialize<T>(data);
-
-            return dataJson;
-        }
-
-        public static List<string> ReadCSV(string file)
+        private static object ReadCSV(string file)
         {
             return ReadCSV(file, $@"{GetPath() + _DEFAULT_IN_DIR}", $@"{GetPath() + _DEFAULT_OUT_DIR}");
         }
 
-        public static List<string> ReadCSV(string file, string inPath, string outPath)
+        private static object ReadCSV(string file, string inPath, string outPath)
         {
             List<string> csvData = new List<string>() { string.Empty, string.Empty, string.Empty };
             try
             {
-                using (StreamReader reader = new StreamReader(inPath + file))
+                using (StreamReader reader = new StreamReader(Directory.GetFiles(inPath, file)[0]))
                 {
                     while (!reader.EndOfStream)
                     {
@@ -78,6 +68,12 @@ namespace HES
             }
 
             return csvData;
+        }
+
+        private static T ReadJSON<T>(string file)
+        {
+            string data = File.ReadAllText(GetPath() + file);
+            return JsonSerializer.Deserialize<T>(data);
         }
 
         public static void CreateDefaultDirsIfRequired()

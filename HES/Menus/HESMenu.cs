@@ -14,7 +14,7 @@ namespace HES
     class HESMenu
     {
         private const string _BANNERSTRING = "HES";
-        public delegate void InterceptUserKeystrokesImpl(ref string data, ConsoleKeyInfo key);
+        protected delegate void InterceptUserKeystrokesImpl(ref string data, ConsoleKeyInfo key);
         protected Dictionary<string, string> fields = new Dictionary<string, string>();
 
 
@@ -66,12 +66,11 @@ namespace HES
             HESConsole.Write("Source code (git repo) ", "https://github.com/zalaszz/HES", "\n\n", ConsoleColor.Cyan, alignSize: 80);
         }
 
-        protected void PrintFieldsToConsole()
+        protected void PrintFieldsToConsole(Action<KeyValuePair<string, string>, int> printImpl, bool multiAnswer)
         {
             for (int i = 0; i < fields.Count; i++)
             {
-                HESConsole.Write(String.Format("{0}", fields.ElementAt(i).Key.ToLower()), ConsoleColor.Magenta);
-                HESConsole.Write("> ", ConsoleColor.Cyan);
+                printImpl(fields.ElementAt(i), i);
                 if (fields.ElementAt(i).Key.Contains("Date"))
                 {
                     fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(TtoCurrentDateImpl);
@@ -82,7 +81,7 @@ namespace HES
                     fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(AllowOnlyNumbersImpl);
                     Console.Write("\n");
                 }
-                else
+                else if(multiAnswer.Equals(true))
                     fields[fields.ElementAt(i).Key] = Console.ReadLine();
             }
         }
@@ -154,7 +153,12 @@ namespace HES
             }
         }
 
-        public Dictionary<string, string> GetFields()
+        public void SetAllFields(Action<Dictionary<string, string>> setAllFieldsImpl)
+        {
+            setAllFieldsImpl(fields);
+        }
+
+        public Dictionary<string, string> GetAllFields()
         {
             return fields;
         }
