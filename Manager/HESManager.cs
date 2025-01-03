@@ -13,22 +13,19 @@ namespace HES
 {
     class HESManager
     {
-        private MainMenu _MAINMENU;
         private WindowMenu _WINDOWMENU;
         private HESWindow _WINDOW;
-        private Instruction _INSTRUCTIONS;
 
-        public HESManager(string windowName = "HES")
+        public HESManager()
         {
-            _MAINMENU = new MainMenu();
             _WINDOWMENU = new WindowMenu();
-            _WINDOW = new HESWindow(windowName);
-            _INSTRUCTIONS = new Instruction();
+            _WINDOW = new HESWindow();
         }
 
         public void Start()
         {
-            Task.Run(async () => await ResourceLoader.LoadResourcesAsync());
+            Task.Run(async () => await ResourceManager.LoadResourcesAsync());
+            //ResourceLoader.LoadResources();
 
             while (true)
             {
@@ -36,9 +33,9 @@ namespace HES
                 {
                     _WINDOWMENU.Start(); // Start the Menu with all the windows
 
-                    _MAINMENU.Start(); // Start the Main Menu
+                    ResourceManager.GetInstance<MainMenu>().Start(); // Start the Main Menu
 
-                    _INSTRUCTIONS.SetInstructions(_MAINMENU.GetAllFields()); //Sets the data the user typed
+                    ResourceManager.GetInstance<Instruction>().SetInstructions(ResourceManager.GetInstance<MainMenu>().GetAllFields()); //Sets the data the user typed
 
                     _WINDOW.GetWindow(_WINDOWMENU.GetWindowHandlerFromUserInput()); //Gets the window chosen by the user
 
@@ -52,7 +49,7 @@ namespace HES
                 }
                 finally
                 {
-                    _INSTRUCTIONS.Clear();
+                    ResourceManager.GetInstance<Instruction>().Clear();
                 }
             }
         }
@@ -62,7 +59,7 @@ namespace HES
             HESThreadPool<List<VKObjectContainer>> TPool =
                 new HESThreadPool<List<VKObjectContainer>>(1);
 
-            TPool.SetWorkLoad(_INSTRUCTIONS.GetInstructions());
+            TPool.SetWorkLoad(ResourceManager.GetInstance<Instruction>().GetInstructions());
             TPool.StartWork();
             TPool.Join(); //Prevents further execution of the code until the tasks are complete
         }

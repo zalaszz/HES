@@ -18,6 +18,7 @@ namespace HES.Menus
             }
 
             DefaultMenu();
+            Console.Clear();
         }
 
         private void DefaultMenu()
@@ -27,9 +28,9 @@ namespace HES.Menus
                 string label = ((index + 1) % 2).Equals(0) ? $"{windowText}\n" : String.Format("{0,-40}", $"{windowText}");
                 HESConsole.Write("[", $"{index}", "] ", ConsoleColor.Green);
                 HESConsole.Write(label, ConsoleColor.White);
-                if (index.Equals(GetAllFields().Count - 1))
+                if (index.Equals(GetAllFields().Count - 1)) // Check if this is the last iteration
                 {
-                    HESConsole.Write("\n", "Choose a window", "> ", ConsoleColor.White);
+                    HESConsole.Write("\n", "Choose a window", "> ", ConsoleColor.DarkRed);
                 }
             }, false);
             UserInput = InterceptUserKeystrokes(AllowOnlyNumbersImpl);

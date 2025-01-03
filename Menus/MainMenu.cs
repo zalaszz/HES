@@ -1,6 +1,5 @@
 ﻿
 using HES.Interfaces;
-using HES.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,14 +28,13 @@ namespace HES.Menus
 
         private void CSVFileMenu()
         {
-            HESConsole.Write("---> [", "Data File Detected - Reading data", "] <---\n\n", ConsoleColor.Green, alignSize: 80);
+            HESConsole.Write("---> [", "Data File Detected - Info Loaded", "] <---\n\n", ConsoleColor.Green, alignSize: 80);
 
             ProfileLogin();
         }
 
         private void ProfileLogin()
         {
-            Console.WriteLine(fields.Count);
             for (int i = 0; i < 2; i++) // Less than 2 because we only have 2 fields for the login User and Password
             {
                 HESConsole.Write(String.Format("{0}", fields.ElementAt(i).Key.ToLower()), ConsoleColor.Magenta);

@@ -37,7 +37,7 @@ namespace HES
                 int color1 = new Random().Next(1, 15) - Convert.ToInt16(0 + DateTime.UtcNow.Second.ToString().Substring(1)) + 1;
                 int color2 = new Random().Next(1, 15);
 
-                for (int j = 0; j < FiggleFonts.Isometric2.Render(_BANNERSTRING[i].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None).Length; j++)
+                for (int j = 0; j < FiggleFonts.Isometric2.Render(_BANNERSTRING[i].ToString()).Split(new[] { "\n" }, StringSplitOptions.None).Length; j++)
                 {
                     string firstLetterLine = FiggleFonts.Isometric2.Render(_BANNERSTRING[i].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
                     string secondLetterLine = FiggleFonts.Isometric2.Render(_BANNERSTRING[i + 1].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
@@ -45,7 +45,7 @@ namespace HES
 
                     HESConsole.Write(string.Format("{0,33}", firstLetterLine), (ConsoleColor)(color > 15 ? 15 : color));
                     HESConsole.Write($"{secondLetterLine}", (ConsoleColor)(color1 < 1 ? 1 : color1));
-                    HESConsole.Write($"{thirdLetterLine} \r\n", (ConsoleColor)color2);
+                    HESConsole.Write($"{thirdLetterLine} \n", (ConsoleColor)color2);
                 }
             }
         }
@@ -173,9 +173,9 @@ namespace HES
             dto.AdditionalFields.ForEach(field => fields.Add(field.name, ""));
         }
 
-        public void SetMenuFields(params string[] fields)
+        public void SetMenuFields(params string[] fieldsToSet)
         {
-            fields.ToList().ForEach(field => this.fields.Add(field, ""));
+            fieldsToSet.ToList().ForEach(field => fields.Add(field, ""));
         }
     }
 }

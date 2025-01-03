@@ -34,11 +34,9 @@ namespace HES
         private delegate bool EnumWindowsProc(int hwd, int lParam);
 
         private const int SW_NORMAL = 1;
-        private string _WINDOWNAME;
 
-        public HESWindow(string windowName)
+        public HESWindow()
         {
-            _WINDOWNAME = windowName;
             HESDefaultWindowSettings();
         }
 
