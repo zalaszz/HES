@@ -9,8 +9,7 @@ namespace HES.Menus
     class MainMenu : HESMenu, IResourceProvider
     {
         private const string _RESOURCE = @"*.csv";
-
-        public MainMenu():base("Username", "Password", "Cifs", "Start Date", "End Date") { }
+        private const string _RESOURCE_FIELDS = @"\Resources\menu.json";
 
         public override void Start()
         {
@@ -29,7 +28,7 @@ namespace HES.Menus
 
         private void CSVFileMenu()
         {
-            HESConsole.Write("---> [", "Data File Detected - Reading data", "] <---\n\n", ConsoleColor.Green, alignSize: 80);
+            HESConsole.Write("---> [", "Data File Detected - Info Loaded", "] <---\n\n", ConsoleColor.Green, alignSize: 80);
 
             ProfileLogin();
         }
@@ -76,6 +75,10 @@ namespace HES.Menus
 
         public void GetResource()
         {
+            // Set Menu Fields Placeholders if there's a menu.json file
+            SetMenuFieldsFromJson(_RESOURCE_FIELDS);
+
+            // Set Menu Fields Values if there's a csv file in the \IN directory
             HESFile.CreateDefaultDirsIfRequired();
             if (!HESFile.HasFile()) return;
 

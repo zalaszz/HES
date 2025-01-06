@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using HES.Menus.Fields;
+using System.Collections.Generic;
 
 namespace HES.Models
 {
     class MenuDTO : HESDTO
     {
-        public List<Dictionary<string, string>> LoginFields { get; set; }
-        public List<Dictionary<string, string>> AdditionalFields { get; set; }
+        public List<MenuField> LoginFields { get; set; }
+        public List<MenuField> AdditionalFields { get; set; }
     }
 }

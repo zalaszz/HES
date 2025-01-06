@@ -1,5 +1,5 @@
 {
-  "loginFields": [
+  "LoginFields": [
     {
       "name": "Username",
       "type": "text"
@@ -9,7 +9,7 @@
       "type": "hidden"
     }
   ],
-  "additionalFields": [
+  "AdditionalFields": [
     {
       "name": "Cifs",
       "type": "number"

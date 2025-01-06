@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System;
 using System.Text.Json;
-using System.Collections.Generic;
 using System.Linq;
 using HES.Models;
 
@@ -19,7 +18,7 @@ namespace HES
 
         public static T ReadFromFile<T>(string file)
         {
-            if (file.Contains(".csv") && typeof(T).Equals(typeof(List<string>))) return (T)ReadCSV(file);
+            if (file.Contains(".csv") && typeof(T).IsSubclassOf(typeof(HESDTO))) return (T)ReadCSV(file);
             if (file.Contains(".json") && typeof(T).IsSubclassOf(typeof(HESDTO))) return ReadJSON<T>(file);
 
             throw new HESException("Only List<string> and HESDTOs types can be passed into ReadFromFile() method...");
@@ -30,19 +29,20 @@ namespace HES
             return ReadCSV(file, $@"{GetPath() + _DEFAULT_IN_DIR}", $@"{GetPath() + _DEFAULT_OUT_DIR}");
         }
 
-        private static object ReadCSV(string file, string inPath, string outPath)
+        private static object ReadCSV(string fileExtension, string inPath, string outPath)
         {
-            List<string> csvData = new List<string>() { string.Empty, string.Empty, string.Empty };
+            CSVDTO dto = new CSVDTO();
+            string file = Directory.GetFiles(inPath, fileExtension)[0];
             try
             {
-                using (StreamReader reader = new StreamReader(Directory.GetFiles(inPath, file)[0]))
+                using (StreamReader reader = new StreamReader(file))
                 {
                     while (!reader.EndOfStream)
                     {
                         string line = reader.ReadLine();
                         string[] values = line.Split(';');
 
-                        for (int i = 0; i < csvData.Count; i++)
+                        for (int i = 0; i < 3; i++) // 3 is number of fields (cif, startdate, enddate)
                         {
                             if (values[i].Any(c => char.IsLetter(c)))
                             {
@@ -50,9 +50,9 @@ namespace HES
                             }
                         }
 
-                        csvData[0] += $"{values[0]} ";
-                        csvData[1] += $"{values[1]} ";
-                        csvData[2] += $"{values[2]} ";
+                        dto.cifs.Add(values[0]);
+                        dto.startDates.Add(values[1]);
+                        dto.endDates.Add(values[2]);
                     }
                 }
             }
@@ -64,10 +64,10 @@ namespace HES
             }
             finally
             {
-                File.Move($"{inPath + file}", $"{outPath}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
+                File.Move($"{file}", $"{outPath}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
             }
 
-            return csvData;
+            return dto;
         }
 
         private static T ReadJSON<T>(string file)

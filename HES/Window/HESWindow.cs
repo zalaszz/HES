@@ -28,15 +28,15 @@ namespace HES
         /* Apresentar a window */
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll")]
+        private static extern bool IsWindowVisible(IntPtr hwnd);
 
         private delegate bool EnumWindowsProc(int hwd, int lParam);
 
         private const int SW_NORMAL = 1;
-        private string _WINDOWNAME;
 
-        public HESWindow(string windowName)
+        public HESWindow()
         {
-            _WINDOWNAME = windowName;
             HESDefaultWindowSettings();
         }
 
@@ -50,14 +50,16 @@ namespace HES
         public static Dictionary<int, StringBuilder> GetAllWindows()
         {
             Dictionary<int, StringBuilder> windows = new Dictionary<int, StringBuilder>();
-            EnumWindows((int hwd, int lPAram) =>
+            EnumWindows((int hwd, int lPAram) => // Enumerating Top Windows
             {
                 StringBuilder sb = new StringBuilder(1024);
                 GetWindowText(new IntPtr(hwd), sb, sb.Capacity);
-                if (sb.ToString().Length > 0)
+
+                if (sb.ToString().Length > 0 && IsWindowVisible(new IntPtr(hwd))) // Only add to the dictionary if the window is visible and has a title
                 {
                     windows.Add(hwd, sb);
                 }
+
                 return true;
             }, 0);
             return windows;

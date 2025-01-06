@@ -1,4 +1,5 @@
 ﻿using Figgle;
+using HES.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,10 @@ namespace HES
         protected delegate void InterceptUserKeystrokesImpl(ref string data, ConsoleKeyInfo key);
         protected Dictionary<string, string> fields = new Dictionary<string, string>();
 
-
-        public HESMenu(params string[] fieldKeys)
-        {
-            foreach (var key in fieldKeys)
-            {
-                fields.Add(key, "");
-            }
-        }
+        //public HESMenu(params string[] fields)
+        //{
+        //    SetMenuFields(fields);
+        //}
 
         public virtual void Start()
         {
@@ -40,7 +37,7 @@ namespace HES
                 int color1 = new Random().Next(1, 15) - Convert.ToInt16(0 + DateTime.UtcNow.Second.ToString().Substring(1)) + 1;
                 int color2 = new Random().Next(1, 15);
 
-                for (int j = 0; j < FiggleFonts.Isometric2.Render(_BANNERSTRING[i].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None).Length; j++)
+                for (int j = 0; j < FiggleFonts.Isometric2.Render(_BANNERSTRING[i].ToString()).Split(new[] { "\n" }, StringSplitOptions.None).Length; j++)
                 {
                     string firstLetterLine = FiggleFonts.Isometric2.Render(_BANNERSTRING[i].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
                     string secondLetterLine = FiggleFonts.Isometric2.Render(_BANNERSTRING[i + 1].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
@@ -48,7 +45,7 @@ namespace HES
 
                     HESConsole.Write(string.Format("{0,33}", firstLetterLine), (ConsoleColor)(color > 15 ? 15 : color));
                     HESConsole.Write($"{secondLetterLine}", (ConsoleColor)(color1 < 1 ? 1 : color1));
-                    HESConsole.Write($"{thirdLetterLine} \r\n", (ConsoleColor)color2);
+                    HESConsole.Write($"{thirdLetterLine} \n", (ConsoleColor)color2);
                 }
             }
         }
@@ -153,14 +150,32 @@ namespace HES
             }
         }
 
-        public void SetAllFields(Action<Dictionary<string, string>> setAllFieldsImpl)
+        public void SetAllFieldsValues(Action<Dictionary<string, string>> setAllFieldsValuesImpl)
         {
-            setAllFieldsImpl(fields);
+            setAllFieldsValuesImpl(fields);
         }
 
         public Dictionary<string, string> GetAllFields()
         {
             return fields;
+        }
+
+        public void SetMenuFieldsFromJson(string jsonFile)
+        {
+            if (!HESFile.HasFile(jsonFile))
+            {
+                SetMenuFields("Username", "Password", "Cifs", "Start Date", "End Date");
+                return;
+            }
+
+            MenuDTO dto = HESFile.ReadFromFile<MenuDTO>(jsonFile);
+            dto.LoginFields.ForEach(field => fields.Add(field.name, ""));
+            dto.AdditionalFields.ForEach(field => fields.Add(field.name, ""));
+        }
+
+        public void SetMenuFields(params string[] fieldsToSet)
+        {
+            fieldsToSet.ToList().ForEach(field => fields.Add(field, ""));
         }
     }
 }
