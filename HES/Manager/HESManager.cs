@@ -18,8 +18,8 @@ namespace HES
 
         public HESManager()
         {
-            _WINDOWMENU = new WindowMenu();
             _WINDOW = new HESWindow();
+            _WINDOWMENU = new WindowMenu();
         }
 
         public void Start()
@@ -35,7 +35,7 @@ namespace HES
 
                     ResourceManager.GetInstance<MainMenu>().Start(); // Start the Main Menu
 
-                    ResourceManager.GetInstance<Instruction>().SetInstructions(ResourceManager.GetInstance<MainMenu>().GetAllFields()); //Sets the data the user typed
+                    ResourceManager.GetInstance<Instruction>().SetInstructions(ResourceManager.GetInstance<MainMenu>().GetMenuFieldContainer()); //Sets the data the user typed
 
                     _WINDOW.GetWindow(_WINDOWMENU.GetWindowHandlerFromUserInput()); //Gets the window chosen by the user
 

@@ -24,10 +24,10 @@ namespace HES
         private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
         /* Definir janela como ativa */
         [DllImport("user32.dll")]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
         /* Apresentar a window */
         [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [DllImport("user32.dll")]
         private static extern bool IsWindowVisible(IntPtr hwnd);
 

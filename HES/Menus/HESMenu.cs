@@ -1,4 +1,5 @@
 ﻿using Figgle;
+using HES.Menus.Fields;
 using HES.Models;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace HES
     {
         private const string _BANNERSTRING = "HES";
         protected delegate void InterceptUserKeystrokesImpl(ref string data, ConsoleKeyInfo key);
-        protected Dictionary<string, string> fields = new Dictionary<string, string>();
+        private MenuFieldsContainer FieldsContainer = new MenuFieldsContainer();
 
         //public HESMenu(params string[] fields)
         //{
@@ -63,23 +64,24 @@ namespace HES
             HESConsole.Write("Source code (git repo) ", "https://github.com/zalaszz/HES", "\n\n", ConsoleColor.Cyan, alignSize: 80);
         }
 
-        protected void PrintFieldsToConsole(Action<KeyValuePair<string, string>, int> printImpl, bool multiAnswer)
+        protected void PrintFieldsToConsole(Action<MenuField, int> printImpl, bool multiAnswer)
         {
-            for (int i = 0; i < fields.Count; i++)
+            for (int i = 0; i < FieldsContainer.CountAllFields(); i++)
             {
-                printImpl(fields.ElementAt(i), i);
-                if (fields.ElementAt(i).Key.Contains("Date"))
+                MenuField field = FieldsContainer.GetAllFields().ElementAt(i);
+                printImpl(field, i);
+                if (field.type.ToLower().Equals("date"))
                 {
-                    fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(TtoCurrentDateImpl);
+                    field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
                     Console.Write("\n");
                 }
-                else if (fields.ElementAt(i).Key.Contains("Cifs"))
+                else if (field.type.ToLower().Equals("number"))
                 {
-                    fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(AllowOnlyNumbersImpl);
+                    field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl));
                     Console.Write("\n");
                 }
                 else if(multiAnswer.Equals(true))
-                    fields[fields.ElementAt(i).Key] = Console.ReadLine();
+                    field.SetValue(Console.ReadLine());
             }
         }
 
@@ -142,40 +144,35 @@ namespace HES
             }
         }
 
-        public void SetAdditionalFieldsValues(List<string> data)
-        {
-            for (int i = 2; i < fields.Count; i++) // Starting from number 2 because we don't want to set the login fields
+        public void SetAdditionalFieldsValues(params List<string>[] dtoData)
+        { //WIP
+            for (int i = 0; i < FieldsContainer.CountAdditionalFields(); i++)
             {
-                fields[fields.ElementAt(i).Key] = data[i - 2]; // Minus 2 so we can start from the beginning of the list
+                FieldsContainer.AdditionalFields.ElementAt(i).SetValue(dtoData[i]);
             }
         }
 
-        public void SetAllFieldsValues(Action<Dictionary<string, string>> setAllFieldsValuesImpl)
+        public void SetAdditionalFieldsValues(params string[] dtoData)
         {
-            setAllFieldsValuesImpl(fields);
-        }
-
-        public Dictionary<string, string> GetAllFields()
-        {
-            return fields;
-        }
-
-        public void SetMenuFieldsFromJson(string jsonFile)
-        {
-            if (!HESFile.HasFile(jsonFile))
+            for (int i = 0; i < FieldsContainer.CountAdditionalFields(); i++)
             {
-                SetMenuFields("Username", "Password", "Cifs", "Start Date", "End Date");
-                return;
+                FieldsContainer.AdditionalFields.ElementAt(i).SetValue(dtoData[i]);
             }
-
-            MenuDTO dto = HESFile.ReadFromFile<MenuDTO>(jsonFile);
-            dto.LoginFields.ForEach(field => fields.Add(field.name, ""));
-            dto.AdditionalFields.ForEach(field => fields.Add(field.name, ""));
         }
 
-        public void SetMenuFields(params string[] fieldsToSet)
+        public void SetAllFieldsValues(Action<MenuFieldsContainer> setAllFieldsValuesImpl)
         {
-            fieldsToSet.ToList().ForEach(field => fields.Add(field, ""));
+            setAllFieldsValuesImpl(GetMenuFieldContainer());
+        }
+
+        public HashSet<MenuField> GetFields()
+        {
+            return FieldsContainer.GetAllFields();
+        }
+
+        public MenuFieldsContainer GetMenuFieldContainer()
+        {
+            return FieldsContainer;
         }
     }
 }

@@ -75,16 +75,9 @@ namespace HES.Menus.Fields
                 });
         }
 
-        public void SetFieldsValues(MenuField field)
-        { //WIP
-            if (field.category.Equals(Category.Login))
-            {
-                GetField(field.name).value = field.value;
-            }
-            else
-            {
-                AdditionalFields.Add(GetField(field.name));
-            }
+        public void SetFieldValue(string name, string value)
+        {
+            GetField(name).SetValue(value);
         }
 
         public int CountLoginFields()

@@ -1,5 +1,6 @@
 ﻿
 using HES.Interfaces;
+using HES.Menus.Fields;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,7 @@ namespace HES.Menus
 {
     class MainMenu : HESMenu, IResourceProvider
     {
-        private const string _RESOURCE = @"*.csv";
-        private const string _RESOURCE_FIELDS = @"\Resources\menu.json";
+        private const string _RESOURCE = @"\Resources\menu.json";
 
         public override void Start()
         {
@@ -19,34 +19,28 @@ namespace HES.Menus
 
             if (HESFile.HasFile())
             {
-                CSVFileMenu();
+                new CSVMenu().Start(ProfileLogin);
                 return;
             }
 
             DefaultMenu();
         }
 
-        private void CSVFileMenu()
-        {
-            HESConsole.Write("---> [", "Data File Detected - Info Loaded", "] <---\n\n", ConsoleColor.Green, alignSize: 80);
-
-            ProfileLogin();
-        }
-
         private void ProfileLogin()
         {
-            for (int i = 0; i < 2; i++) // Less than 2 because we only have 2 fields for the login User and Password
+            for (int i = 0; i < GetMenuFieldContainer().CountLoginFields(); i++) // Less than 2 because we only have 2 fields for the login User and Password
             {
-                HESConsole.Write(String.Format("{0}", fields.ElementAt(i).Key.ToLower()), ConsoleColor.Magenta);
+                MenuField field = GetMenuFieldContainer().LoginFields.ElementAt(i);
+                HESConsole.Write(String.Format("{0}", field.name.ToLower()), ConsoleColor.Magenta);
                 HESConsole.Write("> ", ConsoleColor.Cyan);
-                if (fields.ElementAt(i).Key.Contains("assword")) // Removing the 'P' from the word "Password" so it can identify with either 'p' or 'P'
+                if (field.name.Contains("assword")) // Removing the 'P' from the word "Password" so it can identify with either 'p' or 'P'
                 {
-                    fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(HidePasswordCredentialsImpl);
+                    field.SetValue(InterceptUserKeystrokes(HidePasswordCredentialsImpl));
                     Console.Write("\n");
                     break;
                 }
 
-                fields[fields.ElementAt(i).Key] = Console.ReadLine();
+                field.SetValue(Console.ReadLine());
             }
         }
 
@@ -54,35 +48,30 @@ namespace HES.Menus
         {
             ProfileLogin();
 
-            for (int i = 2; i < fields.Count; i++)
+            for (int i = 0; i < GetMenuFieldContainer().CountAdditionalFields(); i++)
             {
-                HESConsole.Write(String.Format("{0}", fields.ElementAt(i).Key.ToLower()), ConsoleColor.Magenta);
+                MenuField field = GetMenuFieldContainer().AdditionalFields.ElementAt(i);
+                HESConsole.Write(String.Format("{0}", field.name.ToLower()), ConsoleColor.Magenta);
                 HESConsole.Write("> ", ConsoleColor.Cyan);
-                if (fields.ElementAt(i).Key.Contains("Date"))
+                if (field.name.Contains("Date"))
                 {
-                    fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(TtoCurrentDateImpl);
+                   field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
                     Console.Write("\n");
                 }
-                else if (fields.ElementAt(i).Key.Contains("Cifs"))
+                else if (field.name.Contains("Cifs"))
                 {
-                    fields[fields.ElementAt(i).Key] = InterceptUserKeystrokes(AllowOnlyNumbersImpl);
+                    field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl));
                     Console.Write("\n");
                 }
                 else
-                    fields[fields.ElementAt(i).Key] = Console.ReadLine();
+                    field.SetValue(Console.ReadLine());
             }
         }
 
         public void GetResource()
         {
             // Set Menu Fields Placeholders if there's a menu.json file
-            SetMenuFieldsFromJson(_RESOURCE_FIELDS);
-
-            // Set Menu Fields Values if there's a csv file in the \IN directory
-            HESFile.CreateDefaultDirsIfRequired();
-            if (!HESFile.HasFile()) return;
-
-            SetAdditionalFieldsValues(HESFile.ReadFromFile<List<string>>(_RESOURCE));
+            GetMenuFieldContainer().SetFieldsFromJSON(_RESOURCE);
         }
     }
 }

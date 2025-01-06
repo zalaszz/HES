@@ -16,8 +16,9 @@ namespace HES
         private const string _DEFAULT_IN_DIR = @"\in\";
         private const string _DEFAULT_OUT_DIR = @"\out\";
 
-        public static T ReadFromFile<T>(string file)
+        public static T ReadFromFile<T>(string file, string inPath = "", string outPath = "")
         {
+            if (file.Contains(".csv") && typeof(T).IsSubclassOf(typeof(HESDTO)) && !string.IsNullOrEmpty(inPath) && !string.IsNullOrEmpty(outPath)) return (T)ReadCSV(file, inPath, outPath);
             if (file.Contains(".csv") && typeof(T).IsSubclassOf(typeof(HESDTO))) return (T)ReadCSV(file);
             if (file.Contains(".json") && typeof(T).IsSubclassOf(typeof(HESDTO))) return ReadJSON<T>(file);
 

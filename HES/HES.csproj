@@ -125,6 +125,7 @@
     <Compile Include="Converters\JsonToVKCodeConverter.cs" />
     <Compile Include="Interfaces\IResourceProvider.cs" />
     <Compile Include="Manager\HESManager.cs" />
+    <Compile Include="Menus\CSVMenu.cs" />
     <Compile Include="Menus\Fields\MenuField.cs" />
     <Compile Include="Menus\Fields\MenuFieldsContainer.cs" />
     <Compile Include="Menus\HESMenu.cs" />
