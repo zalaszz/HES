@@ -12,12 +12,14 @@ namespace HES.Menus.Fields
 
         public MenuFieldsContainer()
         {
+            LoginFields = new HashSet<MenuField>();
+            AdditionalFields = new HashSet<MenuField>();
             _DEFAULT_FIELDS = new HashSet<MenuField>() {
-                new MenuField() { name = "Username", category = Category.Login },
-                new MenuField() { name = "Password", category = Category.Login },
-                new MenuField() { name = "Cifs", category = Category.Additional },
-                new MenuField() { name = "Start Date", category = Category.Additional },
-                new MenuField() { name = "End Date", category = Category.Additional }
+                new MenuField() { name = "Username", category = Category.Login, type = "text" },
+                new MenuField() { name = "Password", category = Category.Login, type = "hidden" },
+                new MenuField() { name = "Cifs", category = Category.Additional, type = "number" },
+                new MenuField() { name = "Start Date", category = Category.Additional, type = "date" },
+                new MenuField() { name = "End Date", category = Category.Additional, type = "date" }
             };
         }
 
@@ -50,8 +52,8 @@ namespace HES.Menus.Fields
             }
 
             MenuDTO dto = HESFile.ReadFromFile<MenuDTO>(jsonFile);
-            dto.LoginFields.ForEach(field => LoginFields.Add(new MenuField() { name = field.name, category = Category.Login }));
-            dto.AdditionalFields.ForEach(field => AdditionalFields.Add(new MenuField() { name = field.name, category = Category.Additional }));
+            dto.LoginFields.ForEach(field => LoginFields.Add(new MenuField() { name = field.name, category = Category.Login, type = field.type }));
+            dto.AdditionalFields.ForEach(field => AdditionalFields.Add(new MenuField() { name = field.name, category = Category.Additional, type = field.type }));
         }
 
         public void SetFields(HashSet<MenuField> fieldsToSet)

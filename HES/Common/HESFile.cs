@@ -43,7 +43,7 @@ namespace HES
                         string line = reader.ReadLine();
                         string[] values = line.Split(';');
 
-                        for (int i = 0; i < 3; i++) // 3 is number of fields (cif, startdate, enddate)
+                        for (int i = 0; i < 3; i++) // 3 is number of columns in the csv file (cif, startdate, enddate)
                         {
                             if (values[i].Any(c => char.IsLetter(c)))
                             {

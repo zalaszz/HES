@@ -1,25 +1,25 @@
 {
   "LoginFields": [
     {
-      "name": "Username",
+      "name": "username",
       "type": "text"
     },
     {
-      "name": "Password",
+      "name": "password",
       "type": "hidden"
     }
   ],
   "AdditionalFields": [
     {
-      "name": "Cifs",
+      "name": "cifs",
       "type": "number"
     },
     {
-      "name": "Start Date",
+      "name": "start date",
       "type": "date"
     },
     {
-      "name": "End Date",
+      "name": "end date",
       "type": "date"
     }
   ]

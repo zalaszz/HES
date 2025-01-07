@@ -1,0 +1,33 @@
+{
+  "Instructions": [
+    "./drv",
+    "virtualkey:ENTER",
+    "field:username",
+    "virtualkey:ENTER",
+    "field:password",
+    "virtualkey:ENTER",
+    {
+      "loop": [
+        "FORMSTMTSNAP",
+        "virtualkey:END",
+        "virtualkey:ENTER",
+        "field:cifs",
+        "virtualkey:ENTER",
+        "1",
+        "virtualkey:ENTER",
+        "field:start date",
+        "virtualkey:ENTER",
+        "field:end date",
+        "virtualkey:ENTER",
+        "2",
+        "virtualkey:ENTER",
+        "virtualkey:ENTER",
+        "virtualkey:ENTER",
+        "virtualkey:ENTER",
+        "virtualkey:ENTER"
+      ]
+    },
+    "virtualkey:F11",
+    "virtualkey:F11"
+  ]
+}

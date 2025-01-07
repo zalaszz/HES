@@ -1,7 +1,10 @@
 ﻿using HES.Interfaces;
 using HES.Menus.Fields;
+using HES.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 /**
 * Author: Ricardo Silva
@@ -13,27 +16,41 @@ namespace HES
     class Instruction : IResourceProvider
     {
         private List<VKObjectContainer> finalInstructions = new List<VKObjectContainer>();
-        private List<string> cifs, startDates, endDates;
 
         private const string _RESOURCE = @"\Resources\instructions.json";
+        private InstructionDTO _dto;
 
-        public Instruction() { }
-
-        public void SetInstructions(MenuFieldsContainer instructions)
+        public void SetInstructions(MenuFieldsContainer instructions) // MENUDTO here?
         {
+            foreach (object item in _dto.Instructions)
+            {
+                if (item is string val)
+                {
+                    Console.WriteLine("STRING => " + val);
+                }
+                else if (item is JsonElement element)
+                {
+                    // Verificando se o "loop" existe dentro do objeto JsonElement
+                    if (element.TryGetProperty("loop", out JsonElement loopValue))
+                    {
+                        // Aqui podemos percorrer os itens dentro do loop (caso seja um array de strings)
+                        Console.WriteLine("OBJECT => loop property found:");
+                        foreach (var loopItem in loopValue.EnumerateArray())
+                        {
+                            Console.WriteLine(loopItem.GetString());  // Acessando e imprimindo o valor de cada item do array
+                        }
+                    }
+                }
+            }
+
+            Console.ReadLine();
+
             finalInstructions.Add(VirtualKeys.SetVKs("./drv", 0));
             finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
 
             SetLoginInstructionsImpl(instructions);
 
             SetAdditionalFieldsInstructionsImpl(instructions);
-
-            for (int i = 0; i < cifs.Count; i++)
-            {
-                int numStartDates = startDates.Count.Equals(1) ? 0 : i; //If there's only 1 date use it for all the extracts
-                int numEndDates = endDates.Count.Equals(1) ? 0 : i; 
-                FormStmtSnap(cifs[i], startDates[numStartDates], endDates[numEndDates]);
-            }
 
             finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.F11, 0));
             finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.F11, 0));
@@ -51,13 +68,24 @@ namespace HES
 
         private void SetAdditionalFieldsInstructionsImpl(MenuFieldsContainer instructions)
         {
-            //for (int i = 0; i < instructions.CountAdditionalFields(); i++)
-            //{
-                //MenuField field = instructions.AdditionalFields.ElementAt(i);
-                cifs = instructions.AdditionalFields.ElementAt(0).GetValue<List<string>>();
-                startDates = instructions.AdditionalFields.ElementAt(1).GetValue<List<string>>();
-            endDates = instructions.AdditionalFields.ElementAt(2).GetValue<List<string>>();
-            //}
+            for (int i = 0; i < instructions.CountAdditionalFields(); i++)
+            {
+                MenuField field = instructions.AdditionalFields.ElementAt(i);
+
+                if (i.Equals(0) && field.GetValue() is string value)
+                {
+                    string[] cifs = value.Split(' ');
+                    string[] startDates = ((string)instructions.AdditionalFields.ElementAt(i + 1).GetValue()).Split(' ');
+                    string[] endDates = ((string)instructions.AdditionalFields.ElementAt(i + 2).GetValue()).Split(' ');
+
+                    for (int j = 0; j < cifs.Length; j++)
+                    {
+                        int numStartDates = startDates.Length.Equals(1) ? 0 : j; //If there's only 1 date use it for all cifs
+                        int numEndDates = endDates.Length.Equals(1) ? 0 : j;
+                        FormStmtSnap(cifs[j], startDates[numStartDates], endDates[numEndDates]);
+                    }
+                }
+            }
         }
 
         private void FormStmtSnap(string cif, string startDate, string endDate)
@@ -99,7 +127,7 @@ namespace HES
 
         public void GetResource()
         {
-            
+            _dto = HESFile.ReadFromFile<InstructionDTO>(_RESOURCE);
         }
     }
 }

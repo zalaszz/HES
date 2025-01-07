@@ -27,10 +27,10 @@ namespace HES.Menus
             for (int i = 0; i < HESWindow.GetAllWindows().Count; i++)
             {
                 string windowText = HESWindow.GetAllWindows().ElementAt(i).Value.ToString();
-                string value = windowText.Length > 35 ? $"{windowText.Substring(0, 35)}..." : windowText;
+                string windowTextFormatted = windowText.Length > 35 ? $"{windowText.Substring(0, 35)}..." : windowText;
                 string hwd = HESWindow.GetAllWindows().ElementAt(i).Key.ToString();
-                MenuField field = new MenuField() { name = hwd, category = Category.Additional };
-                field.SetValue(value);
+                MenuField field = new MenuField() { name = windowTextFormatted, category = Category.Additional, type = "text" };
+                field.SetValue(hwd);
 
                 fields.AdditionalFields.Add(field);
             }
@@ -39,7 +39,7 @@ namespace HES.Menus
         private void DefaultMenu()
         {
             PrintFieldsToConsole((field, index) => {
-                string windowText = $"{field.GetValue<string>().ToLower()}";
+                string windowText = $"{field.name.ToLower()}";
                 string label = ((index + 1) % 2).Equals(0) ? $"{windowText}\n" : String.Format("{0,-40}", $"{windowText}");
                 HESConsole.Write("[", $"{index}", "] ", ConsoleColor.Green);
                 HESConsole.Write(label, ConsoleColor.White);

@@ -33,10 +33,18 @@ namespace HES.Menus.Fields
 
         public void SetValue(string value) => this.value = value;
 
+        public object GetValue()
+        {
+            if(!string.IsNullOrEmpty(value)) return value;
+            if (multiValues.Count > 0) return multiValues;
+
+            throw new HESException("Value appears to be null or empty...");
+        }
+
         public T GetValue<T>()
         {
             if (typeof(T).Equals(value.GetType()) && !string.IsNullOrEmpty(value)) return (T)(object)value;
-            if (typeof(T).Equals(multiValues.GetType()) && multiValues.Count >= 0) return (T)(object)multiValues;
+            if (typeof(T).Equals(multiValues.GetType()) && multiValues.Count > 0) return (T)(object)multiValues;
 
             throw new HESException("Only List<string> and string types can be passed into GetValue() method...");
         }
