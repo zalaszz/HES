@@ -39,6 +39,7 @@ namespace HES
             //}
 
 
+<<<<<<< Updated upstream
             //foreach (var item in _dto.Instructions)
             //{
             //    if (item is JsonElement ele && ele.ValueKind.Equals(JsonValueKind.Object))
@@ -46,6 +47,35 @@ namespace HES
             //        Console.WriteLine(item.TryGetProperty("loop", out JsonElement loop));
             //        continue;
             //    }
+=======
+            // Flatten json first
+
+            foreach (var item in _dto.Instructions)
+            {
+                if (item is JsonElement ele && ele.ValueKind.Equals(JsonValueKind.Object))
+                {
+                    if (item.TryGetProperty("loop", out JsonElement loop))
+                    {
+                        foreach (var loopItem in loop.EnumerateArray())
+                        {
+                            if (loopItem.GetString().Contains("field:"))
+                            {
+                                string instructionFromField = instructions.GetField(loopItem.GetString().Replace("field:", "")).GetValue<string>();
+                                finalInstructions.Add(VirtualKeys.SetVKs(instructionFromField, 0));
+                            }
+
+                            if (loopItem.GetString().Contains("virtualkey:"))
+                            {
+                                if (Enum.TryParse(loopItem.GetString().Replace("virtualkey:", ""), out VK_CODE result))
+                                {
+                                    finalInstructions.Add(VirtualKeys.SetVKs(result, 0));
+                                }
+                            }
+                        }
+                    }
+                    continue;
+                }
+>>>>>>> Stashed changes
 
             //    Console.WriteLine(item.GetString());
             //}
