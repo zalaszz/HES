@@ -22,25 +22,32 @@ namespace HES
 
         public void SetInstructions(MenuFieldsContainer instructions) // MENUDTO here?
         {
-            foreach (object item in _dto.Instructions)
+            //foreach (var instruction in _dto.Instructions)
+            //{
+            //    if (instruction.ValueKind == JsonValueKind.Object && instruction.TryGetProperty("loop", out var loop))
+            //    {
+            //        Console.WriteLine("Loop:");
+            //        foreach (var item in loop.EnumerateArray())
+            //        {
+            //            Console.WriteLine($"  {item.GetString()}");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine(instruction.GetString());
+            //    }
+            //}
+
+
+            foreach (var item in _dto.Instructions)
             {
-                if (item is string val)
+                if (item is JsonElement ele && ele.ValueKind.Equals(JsonValueKind.Object))
                 {
-                    Console.WriteLine("STRING => " + val);
+                    Console.WriteLine(item.TryGetProperty("loop", out JsonElement loop));
+                    continue;
                 }
-                else if (item is JsonElement element)
-                {
-                    // Verificando se o "loop" existe dentro do objeto JsonElement
-                    if (element.TryGetProperty("loop", out JsonElement loopValue))
-                    {
-                        // Aqui podemos percorrer os itens dentro do loop (caso seja um array de strings)
-                        Console.WriteLine("OBJECT => loop property found:");
-                        foreach (var loopItem in loopValue.EnumerateArray())
-                        {
-                            Console.WriteLine(loopItem.GetString());  // Acessando e imprimindo o valor de cada item do array
-                        }
-                    }
-                }
+
+                Console.WriteLine(item.GetString());
             }
 
             Console.ReadLine();
