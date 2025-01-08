@@ -24,8 +24,8 @@ namespace HES
 
         public void Start()
         {
-            Task.Run(async () => await ResourceManager.LoadResourcesAsync());
-            //ResourceLoader.LoadResources();
+            //Task.Run(async () => await ResourceManager.LoadResourcesAsync());
+            ResourceManager.LoadResources();
 
             while (true)
             {

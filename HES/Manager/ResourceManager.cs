@@ -22,16 +22,17 @@ namespace HES.Common
 
         private static void LoadResourcesImpl()
         {
-            List<Type> types = Assembly.GetExecutingAssembly()
+            Assembly.GetExecutingAssembly()
                     .GetTypes()
-                    .Where(t => typeof(IResourceProvider).IsAssignableFrom(t) && !t.IsInterface)
-                    .ToList();
-
-            types.ForEach(type => {
-                IResourceProvider instancia = Activator.CreateInstance(type) as IResourceProvider;
-                INSTANCES.Add(instancia);
-                instancia?.GetResource();
-            });
+                    .Where(type =>  typeof(IResourceProvider).IsAssignableFrom(type) && !type.IsInterface)
+                    .OrderByDescending(type => type.Name)
+                    .ToList()
+                    .ForEach(type => {
+                        //Console.WriteLine(type.Name);
+                        IResourceProvider instancia = Activator.CreateInstance(type) as IResourceProvider;
+                        INSTANCES.Add(instancia);
+                        instancia?.GetResource();
+                    });
         }
 
         public static T GetInstance<T>() where T : IResourceProvider

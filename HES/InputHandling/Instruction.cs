@@ -39,18 +39,18 @@ namespace HES
             //}
 
 
-            foreach (var item in _dto.Instructions)
-            {
-                if (item is JsonElement ele && ele.ValueKind.Equals(JsonValueKind.Object))
-                {
-                    Console.WriteLine(item.TryGetProperty("loop", out JsonElement loop));
-                    continue;
-                }
+            //foreach (var item in _dto.Instructions)
+            //{
+            //    if (item is JsonElement ele && ele.ValueKind.Equals(JsonValueKind.Object))
+            //    {
+            //        Console.WriteLine(item.TryGetProperty("loop", out JsonElement loop));
+            //        continue;
+            //    }
 
-                Console.WriteLine(item.GetString());
-            }
+            //    Console.WriteLine(item.GetString());
+            //}
 
-            Console.ReadLine();
+            //Console.ReadLine();
 
             finalInstructions.Add(VirtualKeys.SetVKs("./drv", 0));
             finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
@@ -68,7 +68,7 @@ namespace HES
             for (int i = 0; i < instructions.CountLoginFields(); i++)
             {
                 MenuField field = instructions.LoginFields.ElementAt(i);
-                finalInstructions.Add(VirtualKeys.SetVKs(field.GetValue<string>(), 0));
+                finalInstructions.Add(VirtualKeys.SetVKs((string)field.GetValue(), 0));
                 finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
             }
         }

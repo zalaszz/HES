@@ -8,6 +8,7 @@ namespace HES.Menus
     class MainMenu : HESMenu, IResourceProvider
     {
         private const string _RESOURCE = @"\Resources\menu.json";
+        private CSVMenu _subMenu = new CSVMenu();
 
         public override void Start()
         {
@@ -15,9 +16,9 @@ namespace HES.Menus
 
             HESFile.CreateDefaultDirsIfRequired();
 
-            if (HESFile.HasFile())
+            if (_subMenu.ContainsData) // Checking if the submenu has got any data from the csv file
             {
-                new CSVMenu().Start(ProfileLogin);
+                _subMenu.StartOnce(ProfileLogin);
                 return;
             }
 
@@ -51,12 +52,12 @@ namespace HES.Menus
                 MenuField field = GetMenuFieldContainer().AdditionalFields.ElementAt(i);
                 HESConsole.Write(String.Format("{0}", field.name.ToLower()), ConsoleColor.Magenta);
                 HESConsole.Write("> ", ConsoleColor.Cyan);
-                if (field.name.Contains("Date"))
+                if (field.type.ToLower().Equals("date"))
                 {
                    field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
                     Console.Write("\n");
                 }
-                else if (field.name.Contains("Cifs"))
+                else if (field.type.ToLower().Equals("number"))
                 {
                     field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl));
                     Console.Write("\n");
@@ -70,6 +71,8 @@ namespace HES.Menus
         {
             // Set Menu Fields Placeholders if there's a menu.json file
             GetMenuFieldContainer().SetFieldsFromJSON(_RESOURCE);
+            // Getting data from csv submenu and setting values to the fields above
+            _subMenu.GetResource(this);
         }
     }
 }
