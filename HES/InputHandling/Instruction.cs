@@ -38,44 +38,54 @@ namespace HES
             //    }
             //}
 
-
-<<<<<<< Updated upstream
-            //foreach (var item in _dto.Instructions)
-            //{
-            //    if (item is JsonElement ele && ele.ValueKind.Equals(JsonValueKind.Object))
-            //    {
-            //        Console.WriteLine(item.TryGetProperty("loop", out JsonElement loop));
-            //        continue;
-            //    }
-=======
             // Flatten json first
 
             foreach (var item in _dto.Instructions)
             {
-                if (item is JsonElement ele && ele.ValueKind.Equals(JsonValueKind.Object))
+                if (item is JsonElement element && element.ValueKind.Equals(JsonValueKind.String))
                 {
-                    if (item.TryGetProperty("loop", out JsonElement loop))
+                    if (item.GetString().Contains("field:"))
                     {
-                        foreach (var loopItem in loop.EnumerateArray())
-                        {
-                            if (loopItem.GetString().Contains("field:"))
-                            {
-                                string instructionFromField = instructions.GetField(loopItem.GetString().Replace("field:", "")).GetValue<string>();
-                                finalInstructions.Add(VirtualKeys.SetVKs(instructionFromField, 0));
-                            }
+                        string instructionFromField = instructions.GetField(item.GetString().Replace("field:", "")).GetValue() as string;
+                        finalInstructions.Add(VirtualKeys.SetVKs(instructionFromField, 0));
+                    }
+                    else if (item.GetString().Contains("virtualkey:"))
+                    {
+                        Enum.TryParse(item.GetString().Replace("virtualkey:", ""), out VK_CODE result);
+                        finalInstructions.Add(VirtualKeys.SetVKs(result, 0));
+                        continue;
+                    }
 
-                            if (loopItem.GetString().Contains("virtualkey:"))
+                    finalInstructions.Add(VirtualKeys.SetVKs(item.GetString(), 0));
+                    continue;
+                }
+
+                if (!item.TryGetProperty("loop", out JsonElement loop)) continue; // If it can't get the element loop skips to the next iteration
+
+                MenuField field = instructions.GetField(item.GetString());
+
+                for (int i = 0; i < length; i++)
+                {
+                    foreach (var loopItem in loop.EnumerateArray())
+                    {
+                        if (loopItem.GetString().Contains("field:"))
+                        {
+                            string instructionFromField = instructions.GetField(loopItem.GetString().Replace("field:", "")).GetValue() as string;
+                            finalInstructions.Add(VirtualKeys.SetVKs(instructionFromField, 0));
+                        }
+
+                        if (loopItem.GetString().Contains("virtualkey:"))
+                        {
+                            if (Enum.TryParse(loopItem.GetString().Replace("virtualkey:", ""), out VK_CODE result))
                             {
-                                if (Enum.TryParse(loopItem.GetString().Replace("virtualkey:", ""), out VK_CODE result))
-                                {
-                                    finalInstructions.Add(VirtualKeys.SetVKs(result, 0));
-                                }
+                                finalInstructions.Add(VirtualKeys.SetVKs(result, 0));
                             }
                         }
                     }
-                    continue;
                 }
->>>>>>> Stashed changes
+            }
+
+            Console.ReadLine();
 
             //    Console.WriteLine(item.GetString());
             //}

@@ -1,10 +1,9 @@
-﻿namespace HES.Models
+﻿using System.Collections.Generic;
+
+namespace HES.Models
 {
     class HESDTO
     {
-        public override string ToString()
-        {
-            return base.ToString();
-        }
+        protected virtual List<string> ConfigureProperties() { return new List<string>(); }
     }
 }

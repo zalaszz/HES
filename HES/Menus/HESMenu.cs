@@ -1,6 +1,5 @@
 ﻿using Figgle;
 using HES.Menus.Fields;
-using HES.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,12 +69,12 @@ namespace HES
             {
                 MenuField field = FieldsContainer.GetAllFields().ElementAt(i);
                 printImpl(field, i);
-                if (field.type.ToLower().Equals("date"))
+                if (field.type.Equals(FieldType.Date))
                 {
                     field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
                     Console.Write("\n");
                 }
-                else if (field.type.ToLower().Equals("number"))
+                else if (field.type.Equals(FieldType.Number) || field.type.Equals(FieldType.MultiNumber))
                 {
                     field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl));
                     Console.Write("\n");

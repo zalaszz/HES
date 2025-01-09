@@ -29,7 +29,7 @@ namespace HES.Menus
                 string windowText = HESWindow.GetAllWindows().ElementAt(i).Value.ToString();
                 string windowTextFormatted = windowText.Length > 35 ? $"{windowText.Substring(0, 35)}..." : windowText;
                 string hwd = HESWindow.GetAllWindows().ElementAt(i).Key.ToString();
-                MenuField field = new MenuField() { name = windowTextFormatted, category = Category.Additional, type = "text" };
+                MenuField field = new MenuField() { name = windowTextFormatted, category = Category.Additional, type = FieldType.Text };
                 field.SetValue(hwd);
 
                 fields.AdditionalFields.Add(field);

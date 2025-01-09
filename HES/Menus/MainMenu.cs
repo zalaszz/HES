@@ -52,12 +52,12 @@ namespace HES.Menus
                 MenuField field = GetMenuFieldContainer().AdditionalFields.ElementAt(i);
                 HESConsole.Write(String.Format("{0}", field.name.ToLower()), ConsoleColor.Magenta);
                 HESConsole.Write("> ", ConsoleColor.Cyan);
-                if (field.type.ToLower().Equals("date"))
+                if (field.type.Equals(FieldType.Date))
                 {
                    field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
                     Console.Write("\n");
                 }
-                else if (field.type.ToLower().Equals("number"))
+                else if (field.type.Equals(FieldType.Number) || field.type.Equals(FieldType.MultiNumber))
                 {
                     field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl));
                     Console.Write("\n");

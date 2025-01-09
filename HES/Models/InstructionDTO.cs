@@ -12,14 +12,14 @@ namespace HES.Models
             get {
                 if (_loop.Equals(null))
                 {
-                    _loop = Build();
+                    _loop = ConfigureProperties();
                 }
                 return _loop;
             } 
             set => _loop = value;
         }
 
-        private List<string> Build()
+        protected override List<string> ConfigureProperties()
         {
             List<string> localLoop = new List<string>();
             foreach (var instruction in Instructions)

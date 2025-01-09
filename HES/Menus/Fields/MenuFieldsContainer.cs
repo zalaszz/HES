@@ -15,11 +15,11 @@ namespace HES.Menus.Fields
             LoginFields = new HashSet<MenuField>();
             AdditionalFields = new HashSet<MenuField>();
             _DEFAULT_FIELDS = new HashSet<MenuField>() {
-                new MenuField() { name = "Username", category = Category.Login, type = "text" },
-                new MenuField() { name = "Password", category = Category.Login, type = "hidden" },
-                new MenuField() { name = "Cifs", category = Category.Additional, type = "number" },
-                new MenuField() { name = "Start Date", category = Category.Additional, type = "date" },
-                new MenuField() { name = "End Date", category = Category.Additional, type = "date" }
+                new MenuField() { name = "Username", category = Category.Login, type = FieldType.Text },
+                new MenuField() { name = "Password", category = Category.Login, type = FieldType.Hidden },
+                new MenuField() { name = "Cifs", category = Category.Additional, type = FieldType.MultiNumber },
+                new MenuField() { name = "Start Date", category = Category.Additional, type = FieldType.Date },
+                new MenuField() { name = "End Date", category = Category.Additional, type = FieldType.Date }
             };
         }
 
@@ -95,6 +95,11 @@ namespace HES.Menus.Fields
         public int CountAllFields()
         {
             return LoginFields.Count + AdditionalFields.Count;
+        }
+
+        public bool ContainsField(string name)
+        {
+            return GetField(name) != null ? true : false;
         }
     }
 }

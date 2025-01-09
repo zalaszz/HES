@@ -25,7 +25,8 @@
         "virtualkey:ENTER",
         "virtualkey:ENTER",
         "virtualkey:ENTER"
-      ]
+      ],
+      "iterations": "field:cifs"
     },
     "virtualkey:F11",
     "virtualkey:F11"
