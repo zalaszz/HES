@@ -43,6 +43,16 @@ namespace HES.Menus.Fields
             return new HashSet<MenuField>(LoginFields.Union(AdditionalFields));
         }
 
+        public HashSet<MenuField> GetLoginFields()
+        {
+            return LoginFields;
+        }
+
+        public HashSet<MenuField> GetAdditionalFields()
+        {
+            return AdditionalFields;
+        }
+
         public void SetFieldsFromJSON(string jsonFile)
         {
             if (!HESFile.HasFile(jsonFile))

@@ -28,7 +28,7 @@ namespace HES.Common
                     .OrderByDescending(type => type.Name)
                     .ToList()
                     .ForEach(type => {
-                        Console.WriteLine(type.Name);
+                        //Console.WriteLine(type.Name);
                         IResourceProvider instancia = Activator.CreateInstance(type) as IResourceProvider;
                         INSTANCES.Add(instancia);
                         instancia?.GetResource();

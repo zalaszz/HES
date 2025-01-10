@@ -1,7 +1,7 @@
 ﻿using HES.Interfaces;
 using HES.Menus.Fields;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace HES.Menus
 {
@@ -27,44 +27,25 @@ namespace HES.Menus
 
         private void ProfileLogin()
         {
-            for (int i = 0; i < GetMenuFieldContainer().CountLoginFields(); i++) // Less than 2 because we only have 2 fields for the login User and Password
-            {
-                MenuField field = GetMenuFieldContainer().LoginFields.ElementAt(i);
-                HESConsole.Write(String.Format("{0}", field.name.ToLower()), ConsoleColor.Magenta);
-                HESConsole.Write("> ", ConsoleColor.Cyan);
-                if (field.name.Contains("assword")) // Removing the 'P' from the word "Password" so it can identify with either 'p' or 'P'
-                {
-                    field.SetValue(InterceptUserKeystrokes(HidePasswordCredentialsImpl));
-                    Console.Write("\n");
-                    break;
-                }
-
-                field.SetValue(Console.ReadLine());
-            }
+            SetupMenu(GetMenuFieldContainer().GetLoginFields());
         }
 
         private void DefaultMenu()
         {
             ProfileLogin();
 
-            for (int i = 0; i < GetMenuFieldContainer().CountAdditionalFields(); i++)
-            {
-                MenuField field = GetMenuFieldContainer().AdditionalFields.ElementAt(i);
-                HESConsole.Write(String.Format("{0}", field.name.ToLower()), ConsoleColor.Magenta);
-                HESConsole.Write("> ", ConsoleColor.Cyan);
-                if (field.type.Equals(FieldType.Date))
-                {
-                   field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
-                    Console.Write("\n");
-                }
-                else if (field.type.Equals(FieldType.Number) || field.type.Equals(FieldType.MultiNumber))
-                {
-                    field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl));
-                    Console.Write("\n");
-                }
-                else
-                    field.SetValue(Console.ReadLine());
-            }
+            SetupMenu(GetMenuFieldContainer().GetAdditionalFields());
+        }
+
+        private void SetupMenu(HashSet<MenuField> fields)
+        {
+            GenerateMenuFromFields(
+               fields,
+               ">",
+               true,
+               ConsoleColor.Magenta,
+               ConsoleColor.Cyan
+           );
         }
 
         public void GetResource()

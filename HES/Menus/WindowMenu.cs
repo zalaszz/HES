@@ -1,14 +1,12 @@
 ﻿
 using HES.Menus.Fields;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace HES.Menus
 {
     class WindowMenu : HESMenu
     {
-        public string UserInput { get; set; }
         public override void Start()
         {
             base.Start();
@@ -38,7 +36,7 @@ namespace HES.Menus
 
         private void DefaultMenu()
         {
-            PrintFieldsToConsole((field, index) => {
+            GenerateMenu((field, index) => {
                 string windowText = $"{field.name.ToLower()}";
                 string label = ((index + 1) % 2).Equals(0) ? $"{windowText}\n" : String.Format("{0,-40}", $"{windowText}");
                 HESConsole.Write("[", $"{index}", "] ", ConsoleColor.Green);
@@ -48,12 +46,11 @@ namespace HES.Menus
                     HESConsole.Write("\n", "Choose a window", "> ", (ConsoleColor)new Random().Next(1, 15));
                 }
             }, false);
-            UserInput = InterceptUserKeystrokes(AllowOnlyNumbersImpl);
         }
 
         public int GetWindowHandlerFromUserInput()
         {
-            return int.Parse(GetFields().ElementAt(int.Parse(UserInput)).GetValue<string>());
+            return int.Parse(GetFields().ElementAt(int.Parse(UserSelectedInput)).GetValue() as string);
         }
     }
 }

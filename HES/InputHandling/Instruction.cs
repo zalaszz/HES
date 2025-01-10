@@ -22,32 +22,23 @@ namespace HES
 
         public void SetInstructions(MenuFieldsContainer instructions) // MENUDTO here?
         {
-            //foreach (var instruction in _dto.Instructions)
-            //{
-            //    if (instruction.ValueKind == JsonValueKind.Object && instruction.TryGetProperty("loop", out var loop))
-            //    {
-            //        Console.WriteLine("Loop:");
-            //        foreach (var item in loop.EnumerateArray())
-            //        {
-            //            Console.WriteLine($"  {item.GetString()}");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine(instruction.GetString());
-            //    }
-            //}
-
-            // Flatten json first
-
-            foreach (var item in _dto.Instructions)
+            for (int u = 0; u < _dto.Instructions.Count; u++)
             {
+                JsonElement item = _dto.Instructions[u];
                 if (item is JsonElement element && element.ValueKind.Equals(JsonValueKind.String))
                 {
                     if (item.GetString().Contains("field:"))
                     {
-                        string instructionFromField = instructions.GetField(item.GetString().Replace("field:", "")).GetValue() as string;
-                        finalInstructions.Add(VirtualKeys.SetVKs(instructionFromField, 0));
+                        if(instructions.GetField(item.GetString().Replace("field:", "")).type.Equals(FieldType.MultiNumber) || instructions.GetField(item.GetString().Replace("field:", "")).type.Equals(FieldType.MultiText))
+                        {
+                            List<string> listInstruction = instructions.GetField(item.GetString().Replace("field:", "")).GetValue() as List<string>;
+                            finalInstructions.Add(VirtualKeys.SetVKs(listInstruction[u], 0));
+                            continue;
+                        }
+
+                        string stringInstruction = instructions.GetField(item.GetString().Replace("field:", "")).GetValue() as string;
+                        finalInstructions.Add(VirtualKeys.SetVKs(stringInstruction, 0));
+                        continue;
                     }
                     else if (item.GetString().Contains("virtualkey:"))
                     {
@@ -55,111 +46,58 @@ namespace HES
                         finalInstructions.Add(VirtualKeys.SetVKs(result, 0));
                         continue;
                     }
-
-                    finalInstructions.Add(VirtualKeys.SetVKs(item.GetString(), 0));
-                    continue;
-                }
-
-                if (!item.TryGetProperty("loop", out JsonElement loop)) continue; // If it can't get the element loop skips to the next iteration
-
-                MenuField field = instructions.GetField(item.GetString());
-
-                for (int i = 0; i < length; i++)
-                {
-                    foreach (var loopItem in loop.EnumerateArray())
+                    else
                     {
-                        if (loopItem.GetString().Contains("field:"))
-                        {
-                            string instructionFromField = instructions.GetField(loopItem.GetString().Replace("field:", "")).GetValue() as string;
-                            finalInstructions.Add(VirtualKeys.SetVKs(instructionFromField, 0));
-                        }
+                        finalInstructions.Add(VirtualKeys.SetVKs(item.GetString(), 0));
+                        continue;
+                    }
+                }else if (item is JsonElement loopElement && loopElement.ValueKind.Equals(JsonValueKind.Object)) {
+                    if (!loopElement.TryGetProperty("loop", out JsonElement loop)) continue; // If it can't get the element loop skips to the next iteration
 
-                        if (loopItem.GetString().Contains("virtualkey:"))
+                    int numIterations = 1;
+                    if (loopElement.TryGetProperty("iterations", out JsonElement iterationsProp))
+                    {
+                        if (int.TryParse(iterationsProp.GetString(), out int parsedIteration))
                         {
-                            if (Enum.TryParse(loopItem.GetString().Replace("virtualkey:", ""), out VK_CODE result))
+                            numIterations = parsedIteration;
+                        }
+                        else if (iterationsProp.GetString().Contains("field:") && instructions.GetField(iterationsProp.GetString().Replace("field:", "")).type.Equals(FieldType.MultiNumber) || instructions.GetField(iterationsProp.GetString().Replace("field:", "")).type.Equals(FieldType.MultiText))
+                        {
+                            numIterations = (instructions.GetField(iterationsProp.GetString().Replace("field:", "")).GetValue() as List<string>).Count;
+                        }
+                    }
+
+                    for (int i = 0; i < numIterations; i++)
+                    {
+                        foreach (var loopItem in loop.EnumerateArray())
+                        {
+                            if (loopItem.GetString().Contains("field:"))
                             {
-                                finalInstructions.Add(VirtualKeys.SetVKs(result, 0));
+                                if (instructions.GetField(loopItem.GetString().Replace("field:", "")).type.Equals(FieldType.MultiNumber) || instructions.GetField(loopItem.GetString().Replace("field:", "")).type.Equals(FieldType.MultiText))
+                                {
+                                    List<string> listInstruction = instructions.GetField(loopItem.GetString().Replace("field:", "")).GetValue() as List<string>;
+                                    finalInstructions.Add(VirtualKeys.SetVKs(listInstruction[i], 0));
+                                    continue;
+                                }
+
+                                string stringInstruction = instructions.GetField(loopItem.GetString().Replace("field:", "")).GetValue() as string;
+                                finalInstructions.Add(VirtualKeys.SetVKs(stringInstruction, 0));
+                                continue;
+
+                            }else if (loopItem.GetString().Contains("virtualkey:"))
+                            {
+                                if (Enum.TryParse(loopItem.GetString().Replace("virtualkey:", ""), out VK_CODE result))
+                                {
+                                    finalInstructions.Add(VirtualKeys.SetVKs(result, 0));
+                                }
+                                continue;
                             }
+
+                            finalInstructions.Add(VirtualKeys.SetVKs(loopItem.GetString(), 0));
                         }
                     }
                 }
             }
-
-            Console.ReadLine();
-
-            //    Console.WriteLine(item.GetString());
-            //}
-
-            //Console.ReadLine();
-
-            finalInstructions.Add(VirtualKeys.SetVKs("./drv", 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-
-            SetLoginInstructionsImpl(instructions);
-
-            SetAdditionalFieldsInstructionsImpl(instructions);
-
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.F11, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.F11, 0));
-        }
-
-        private void SetLoginInstructionsImpl(MenuFieldsContainer instructions)
-        {
-            for (int i = 0; i < instructions.CountLoginFields(); i++)
-            {
-                MenuField field = instructions.LoginFields.ElementAt(i);
-                finalInstructions.Add(VirtualKeys.SetVKs((string)field.GetValue(), 0));
-                finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-            }
-        }
-
-        private void SetAdditionalFieldsInstructionsImpl(MenuFieldsContainer instructions)
-        {
-            for (int i = 0; i < instructions.CountAdditionalFields(); i++)
-            {
-                MenuField field = instructions.AdditionalFields.ElementAt(i);
-
-                if (i.Equals(0) && field.GetValue() is string value)
-                {
-                    string[] cifs = value.Split(' ');
-                    string[] startDates = ((string)instructions.AdditionalFields.ElementAt(i + 1).GetValue()).Split(' ');
-                    string[] endDates = ((string)instructions.AdditionalFields.ElementAt(i + 2).GetValue()).Split(' ');
-
-                    for (int j = 0; j < cifs.Length; j++)
-                    {
-                        int numStartDates = startDates.Length.Equals(1) ? 0 : j; //If there's only 1 date use it for all cifs
-                        int numEndDates = endDates.Length.Equals(1) ? 0 : j;
-                        FormStmtSnap(cifs[j], startDates[numStartDates], endDates[numEndDates]);
-                    }
-                }
-            }
-        }
-
-        private void FormStmtSnap(string cif, string startDate, string endDate)
-        {
-            finalInstructions.Add(VirtualKeys.SetVKs("FORMSTMTSNAP", 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.END, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-
-            finalInstructions.Add(VirtualKeys.SetVKs(cif, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-
-            finalInstructions.Add(VirtualKeys.SetVKs("1", 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-
-            finalInstructions.Add(VirtualKeys.SetVKs(startDate, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-
-            finalInstructions.Add(VirtualKeys.SetVKs(endDate, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-
-            finalInstructions.Add(VirtualKeys.SetVKs("2", 0));
-
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
-            finalInstructions.Add(VirtualKeys.SetVKs(VK_CODE.ENTER, 0));
         }
 
         public List<VKObjectContainer> GetInstructions()

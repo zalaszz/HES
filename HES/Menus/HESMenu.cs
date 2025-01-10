@@ -17,6 +17,7 @@ namespace HES
         private const string _BANNERSTRING = "HES";
         protected delegate void InterceptUserKeystrokesImpl(ref string data, ConsoleKeyInfo key);
         private MenuFieldsContainer FieldsContainer = new MenuFieldsContainer();
+        protected string UserSelectedInput { get; set; }
 
         //public HESMenu(params string[] fields)
         //{
@@ -29,7 +30,7 @@ namespace HES
             Header();
         }
 
-        private void Banner()
+        protected virtual void Banner()
         {
             for (int i = 0; i < 1; i++)
             {
@@ -50,7 +51,7 @@ namespace HES
             }
         }
 
-        private void Header()
+        protected virtual void Header()
         {
             var assembly = Assembly.GetExecutingAssembly().GetName();
             string version = assembly.Version.ToString();
@@ -63,24 +64,63 @@ namespace HES
             HESConsole.Write("Source code (git repo) ", "https://github.com/zalaszz/HES", "\n\n", ConsoleColor.Cyan, alignSize: 80);
         }
 
-        protected void PrintFieldsToConsole(Action<MenuField, int> printImpl, bool multiAnswer)
+        protected void GenerateMenu(string separator, bool multiAnswer, ConsoleColor fieldColor = ConsoleColor.White, ConsoleColor separatorColor = ConsoleColor.White)
         {
-            for (int i = 0; i < FieldsContainer.CountAllFields(); i++)
+            GenerateMenu((field, index) => {
+                HESConsole.Write($"{field.name.ToLower()}", fieldColor);
+                HESConsole.Write($"{separator} ", separatorColor);
+            }, multiAnswer);
+        }
+
+        protected void GenerateMenu(Action<MenuField, int> printImpl, bool multiAnswer) {
+            GenerateMenuFromFields(printImpl, FieldsContainer.GetAllFields(), multiAnswer);
+        }
+
+        protected void GenerateMenuFromFields(HashSet<MenuField> fields, string separator, bool multiAnswer, 
+            ConsoleColor fieldColor = ConsoleColor.White, ConsoleColor separatorColor = ConsoleColor.White)
+        {
+            GenerateMenuFromFields((field, index) => {
+                HESConsole.Write($"{field.name.ToLower()}", fieldColor);
+                HESConsole.Write($"{separator} ", separatorColor);
+            }, fields, multiAnswer);
+        }
+
+        protected void GenerateMenuFromFields(Action<MenuField, int> printImpl, HashSet<MenuField> fields, bool multiAnswer)
+        {
+            for (int i = 0; i < fields.Count; i++)
             {
-                MenuField field = FieldsContainer.GetAllFields().ElementAt(i);
+                MenuField field = fields.ElementAt(i);
+
                 printImpl(field, i);
-                if (field.type.Equals(FieldType.Date))
+
+                if (multiAnswer.Equals(false))
                 {
-                    field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
-                    Console.Write("\n");
+                    if (i.Equals(fields.Count - 1))
+                        UserSelectedInput = InterceptUserKeystrokes(AllowOnlyNumbersImpl); // Create later subtype of this menu class
+                    continue;
                 }
-                else if (field.type.Equals(FieldType.Number) || field.type.Equals(FieldType.MultiNumber))
+
+                switch (field.type)
                 {
-                    field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl));
-                    Console.Write("\n");
+                    case FieldType.Text:
+                        field.SetValue(Console.ReadLine());
+                        break;
+                    case FieldType.MultiText:
+                        field.SetValue(Console.ReadLine().Split(' ').ToList());
+                        break;
+                    case FieldType.Number:
+                        field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl));
+                        break;
+                    case FieldType.MultiNumber:
+                        field.SetValue(InterceptUserKeystrokes(AllowOnlyNumbersImpl).Split(' ').ToList());
+                        break;
+                    case FieldType.Date:
+                        field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
+                        break;
+                    case FieldType.Hidden:
+                        field.SetValue(InterceptUserKeystrokes(HideCredentialsImpl));
+                        break;
                 }
-                else if(multiAnswer.Equals(true))
-                    field.SetValue(Console.ReadLine());
             }
         }
 
@@ -92,7 +132,10 @@ namespace HES
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
                 if (key.Key == ConsoleKey.Enter)
+                {
+                    Console.Write("\n");
                     break;
+                }
 
                 implementation(ref data, key);
             }
@@ -100,7 +143,7 @@ namespace HES
             return data;
         }
 
-        protected void HidePasswordCredentialsImpl(ref string data, ConsoleKeyInfo key)
+        protected void HideCredentialsImpl(ref string data, ConsoleKeyInfo key)
         {
             if (key.Key.Equals(ConsoleKey.Backspace) && data.Length > 0)
             {

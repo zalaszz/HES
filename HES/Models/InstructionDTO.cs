@@ -7,17 +7,17 @@ namespace HES.Models
     class InstructionDTO : HESDTO
     {
         public List<JsonElement> Instructions { get; set; } = new List<JsonElement>();
-        private List<string> _loop;
-        public List<string> Loop { 
-            get {
-                if (_loop.Equals(null))
-                {
-                    _loop = ConfigureProperties();
-                }
-                return _loop;
-            } 
-            set => _loop = value;
-        }
+        //private List<string> _loop;
+        //public List<string> Loop { 
+        //    get {
+        //        if (_loop.Equals(null))
+        //        {
+        //            _loop = ConfigureProperties();
+        //        }
+        //        return _loop;
+        //    } 
+        //    set => _loop = value;
+        //}
 
         protected override List<string> ConfigureProperties()
         {
