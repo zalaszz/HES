@@ -98,6 +98,8 @@ namespace HES
                 PressModifierKey(keyCodes.GetVKObject(i), keyCombinationList);
 
                 keyCombinationList.Add(SetInputs(keyCodes.GetVKObject(i).GetKey()));
+                // We add an empty keystroke between identical ones (e.g., "ss") because it doesn't accept consecutive identical keystrokes.
+                keyCombinationList.Add(SetInputs(0));
 
                 PressModifierKey(keyCodes.GetVKObject(i), keyCombinationList);
             }
