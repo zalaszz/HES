@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+/**
+* Author: Ricardo Silva
+* Date: 22-11-2024 
+*/
+
 namespace HES.Menus.Fields
 {
     public enum Category
@@ -46,10 +51,15 @@ namespace HES.Menus.Fields
 
         public object GetValue()
         {
-            if (!type.Equals(FieldType.MultiNumber) || !type.Equals(FieldType.MultiText) && !string.IsNullOrEmpty(value)) return value;
-            else if (type.Equals(FieldType.MultiNumber) || type.Equals(FieldType.MultiText) && multiValues != null && multiValues.Count > 0) return multiValues;
+            if (!IsMultiType() && !string.IsNullOrEmpty(value)) return value;
+            else if (IsMultiType() && multiValues != null && multiValues.Count > 0) return multiValues;
 
-            throw new HESException("Value appears to be null or empty...");
+            throw new HESException("Value appears to be empty...");
+        }
+
+        public bool IsMultiType()
+        {
+            return type.Equals(FieldType.MultiNumber) || type.Equals(FieldType.MultiText) ? true : false;
         }
 
         [Obsolete("GetValue<T> is deprecated use GetValue() instead.")]

@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+/**
+* Author: Ricardo Silva
+* Date: 22-11-2024 
+*/
+
 namespace HES.Converters
 {
     class JsonToVKCodeConverter : JsonConverter<Dictionary<char, VK_CODE>>

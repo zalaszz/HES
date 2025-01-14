@@ -2,7 +2,6 @@
 using HES.Menus;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 /**
 * Author: Ricardo Silva

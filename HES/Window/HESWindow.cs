@@ -37,7 +37,7 @@ namespace HES
 
         public HESWindow()
         {
-            HESDefaultWindowSettings();
+            HESWindowSettings();
         }
 
         public void GetWindow(int hwd)
@@ -65,12 +65,19 @@ namespace HES
             return windows;
         }
 
-        public void HESDefaultWindowSettings()
+        public void HESWindowSettings()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            string version = versionInfo.FileVersion;
-            Console.Title = $"HES - Haitong Extraction System {version}";
+            Console.Title = $"HES - Haitong Extraction System {GetVersion()}";
+        }
+
+        public static string GetVersion()
+        {
+            return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+        }
+
+        public static string GetProductName()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Name;
         }
     }
 }

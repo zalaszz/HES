@@ -19,10 +19,15 @@ namespace HES
         private MenuFieldsContainer FieldsContainer = new MenuFieldsContainer();
         protected string UserSelectedInput { get; set; }
 
-        //public HESMenu(params string[] fields)
-        //{
-        //    SetMenuFields(fields);
-        //}
+        public HESMenu(params MenuField[] fields)
+        {
+            FieldsContainer.SetFields(fields);
+        }
+
+        public HESMenu(HashSet<MenuField> fields)
+        {
+            FieldsContainer.SetFields(fields);
+        }
 
         public virtual void Start()
         {
@@ -53,13 +58,10 @@ namespace HES
 
         protected virtual void Header()
         {
-            var assembly = Assembly.GetExecutingAssembly().GetName();
-            string version = assembly.Version.ToString();
-            string productName = assembly.Name;
-            string fullString = $"Product Name: {productName} - Version: {version} ";
+            string fullString = $"Product Name: {HESWindow.GetProductName()} - Version: {HESWindow.GetVersion()} ";
 
-            HESConsole.Write("Product Name: ", productName, " — ", ConsoleColor.Blue, alignSize: 80, stringLength: fullString.Length);
-            HESConsole.Write("Version: ", version, " \n", ConsoleColor.DarkYellow);
+            HESConsole.Write("Product Name: ", HESWindow.GetProductName(), " — ", ConsoleColor.Blue, alignSize: 80, stringLength: fullString.Length);
+            HESConsole.Write("Version: ", HESWindow.GetVersion(), " \n", ConsoleColor.DarkYellow);
             HESConsole.Write("Built with ", "love", " by zalasz\n", ConsoleColor.DarkRed, alignSize: 80);
             HESConsole.Write("Source code (git repo) ", "https://github.com/zalaszz/HES", "\n\n", ConsoleColor.Cyan, alignSize: 80);
         }

@@ -1,7 +1,11 @@
-﻿
-using HES.Menus.Fields;
+﻿using HES.Menus.Fields;
 using System;
 using System.Linq;
+
+/**
+* Author: Ricardo Silva
+* Date: 22-11-2024 
+*/
 
 namespace HES.Menus
 {

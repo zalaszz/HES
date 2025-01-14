@@ -2,6 +2,11 @@
 using System.Text.Json.Serialization;
 using HES.Converters;
 
+/**
+* Author: Ricardo Silva
+* Date: 22-11-2024 
+*/
+
 namespace HES.Models
 {
     class SettingDTO : HESDTO

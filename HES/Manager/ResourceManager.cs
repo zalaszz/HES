@@ -5,6 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+/**
+* Author: Ricardo Silva
+* Date: 22-11-2024 
+*/
+
 namespace HES.Common
 {
     class ResourceManager

@@ -3,7 +3,6 @@ using HES.Menus.Fields;
 using HES.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 
 /**
@@ -29,10 +28,10 @@ namespace HES
                 {
                     if (item.GetString().Contains("field:"))
                     {
-                        if(instructions.GetField(item.GetString().Replace("field:", "")).type.Equals(FieldType.MultiNumber) || instructions.GetField(item.GetString().Replace("field:", "")).type.Equals(FieldType.MultiText))
+                        if(instructions.GetField(item.GetString().Replace("field:", "")).IsMultiType())
                         {
                             List<string> listInstruction = instructions.GetField(item.GetString().Replace("field:", "")).GetValue() as List<string>;
-                            finalInstructions.Add(VirtualKeys.SetVKs(listInstruction[u], 0));
+                            finalInstructions.Add(VirtualKeys.SetVKs(listInstruction[u], 0)); // Loop here because it is a multivalue field
                             continue;
                         }
 
@@ -61,7 +60,7 @@ namespace HES
                         {
                             numIterations = parsedIteration;
                         }
-                        else if (iterationsProp.GetString().Contains("field:") && instructions.GetField(iterationsProp.GetString().Replace("field:", "")).type.Equals(FieldType.MultiNumber) || instructions.GetField(iterationsProp.GetString().Replace("field:", "")).type.Equals(FieldType.MultiText))
+                        else if (iterationsProp.GetString().Contains("field:") && instructions.GetField(iterationsProp.GetString().Replace("field:", "")).IsMultiType())
                         {
                             numIterations = (instructions.GetField(iterationsProp.GetString().Replace("field:", "")).GetValue() as List<string>).Count;
                         }
@@ -73,10 +72,10 @@ namespace HES
                         {
                             if (loopItem.GetString().Contains("field:"))
                             {
-                                if (instructions.GetField(loopItem.GetString().Replace("field:", "")).type.Equals(FieldType.MultiNumber) || instructions.GetField(loopItem.GetString().Replace("field:", "")).type.Equals(FieldType.MultiText))
+                                if (instructions.GetField(loopItem.GetString().Replace("field:", "")).IsMultiType())
                                 {
                                     List<string> listInstruction = instructions.GetField(loopItem.GetString().Replace("field:", "")).GetValue() as List<string>;
-                                    finalInstructions.Add(VirtualKeys.SetVKs(listInstruction[i], 0));
+                                    finalInstructions.Add(VirtualKeys.SetVKs(listInstruction[i], 0)); // Loop here as well
                                     continue;
                                 }
 
