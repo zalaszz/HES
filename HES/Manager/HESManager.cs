@@ -2,6 +2,7 @@
 using HES.Menus;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 /**
 * Author: Ricardo Silva
@@ -23,8 +24,8 @@ namespace HES
 
         public void Start()
         {
-            //Task.Run(async () => await ResourceManager.LoadResourcesAsync());
-            ResourceManager.LoadResources();
+            Task.Run(async () => await ResourceManager.LoadResourcesAsync()); // This might cause an exception as MainMenu and others are dependent on it
+            //ResourceManager.LoadResources();
 
             while (true)
             {
