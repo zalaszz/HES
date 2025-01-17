@@ -73,7 +73,7 @@ namespace HES
             int numIterations = 1;
             if (item.TryGetProperty("iterations", out JsonElement iterationsProp))
             {
-                string iterationsPropValue = iterationsProp.GetString();
+                string iterationsPropValue = iterationsProp.GetRawText().Replace("\"", "");
                 string fieldName = iterationsPropValue?.Replace(_FIELD_IDENTIFIER, "");
                 MenuField field = fields.GetField(fieldName);
 
@@ -107,7 +107,8 @@ namespace HES
                     return;
                 }
 
-                finalInstructions.Add(VirtualKeys.SetVKs((field.GetValue() as List<string>)[index], 0));
+                List<string> fieldValues = field.GetValue() as List<string>;
+                finalInstructions.Add(VirtualKeys.SetVKs(index >= fieldValues.Count ? "" : fieldValues[index], 0)); // If the index is out of boundaries just use and empty string to avoid the exception
             }
             else if (elementValue.Contains(_VK_IDENTIFIER))
             {
