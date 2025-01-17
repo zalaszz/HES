@@ -37,22 +37,23 @@ namespace HES
 
         protected virtual void Banner()
         {
-            for (int i = 0; i < 1; i++)
+            int color = new Random().Next(1, 15) + Convert.ToInt16(0 + DateTime.UtcNow.Second.ToString().Substring(0, 1));
+            int color1 = new Random().Next(1, 15) - Convert.ToInt16(0 + DateTime.UtcNow.Second.ToString().Substring(1)) + 1;
+            int color2 = new Random().Next(1, 15);
+
+            string firstLetter = FiggleFonts.Isometric2.Render(_BANNERSTRING[0].ToString());
+            string secondLetter = FiggleFonts.Isometric2.Render(_BANNERSTRING[1].ToString());
+            string thirdLetter = FiggleFonts.Isometric2.Render(_BANNERSTRING[2].ToString());
+
+            for (int j = 0; j < FiggleFonts.Isometric2.Render(_BANNERSTRING[0].ToString()).Split(new[] { "\n" }, StringSplitOptions.None).Length; j++)
             {
-                int color = new Random().Next(1, 15) + Convert.ToInt16(0 + DateTime.UtcNow.Second.ToString().Substring(0, 1));
-                int color1 = new Random().Next(1, 15) - Convert.ToInt16(0 + DateTime.UtcNow.Second.ToString().Substring(1)) + 1;
-                int color2 = new Random().Next(1, 15);
+                string firstLetterLine = firstLetter.Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
+                string secondLetterLine = secondLetter.Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
+                string thirdLetterLine = thirdLetter.Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
 
-                for (int j = 0; j < FiggleFonts.Isometric2.Render(_BANNERSTRING[i].ToString()).Split(new[] { "\n" }, StringSplitOptions.None).Length; j++)
-                {
-                    string firstLetterLine = FiggleFonts.Isometric2.Render(_BANNERSTRING[i].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
-                    string secondLetterLine = FiggleFonts.Isometric2.Render(_BANNERSTRING[i + 1].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
-                    string thirdLetterLine = FiggleFonts.Isometric2.Render(_BANNERSTRING[i + 2].ToString()).Split(new[] { "\r\n" }, StringSplitOptions.None)[j];
-
-                    HESConsole.Write(string.Format("{0,33}", firstLetterLine), (ConsoleColor)(color > 15 ? 15 : color));
-                    HESConsole.Write($"{secondLetterLine}", (ConsoleColor)(color1 < 1 ? 1 : color1));
-                    HESConsole.Write($"{thirdLetterLine} \n", (ConsoleColor)color2);
-                }
+                HESConsole.Write(string.Format("{0,33}", firstLetterLine), (ConsoleColor)(color > 15 ? 15 : color));
+                HESConsole.Write($"{secondLetterLine}", (ConsoleColor)(color1 < 1 ? 1 : color1));
+                HESConsole.Write($"{thirdLetterLine} \n", (ConsoleColor)color2);
             }
         }
 

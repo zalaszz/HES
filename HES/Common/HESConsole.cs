@@ -24,19 +24,19 @@ namespace HES
         {
             string padding = GetLeftPadToAlignCenter(stringLength, alignSize);
 
-            SetLineBackgroundColor(bgColor);
+            //SetLineBackgroundColor(bgColor);
             Console.ForegroundColor = fgColor;
             DisplayText(padding + value);
             Console.ResetColor();
         }
 
-        private static void SetLineBackgroundColor(ConsoleColor bgColor)
-        {
-            if (bgColor.Equals(0))
-                Console.ResetColor();
-            else
-                Console.BackgroundColor = bgColor;
-        }
+        //private static void SetLineBackgroundColor(ConsoleColor bgColor)
+        //{
+        //    if (bgColor.Equals(0))
+        //        Console.ResetColor();
+        //    else
+        //        Console.BackgroundColor = bgColor;
+        //}
 
         public static void WriteLine(string startValue, string value, 
             string endValue, ConsoleColor fgColor, ConsoleColor bgColor = 0, 
@@ -60,7 +60,7 @@ namespace HES
             int length = stringLength.Equals(0) ? fullText.Length : stringLength;
             string padding = GetLeftPadToAlignCenter(length, alignSize);
 
-            SetLineBackgroundColor(bgColor);
+            //SetLineBackgroundColor(bgColor);
             DisplayText(padding + startValue);
             Console.ForegroundColor = fgColor;
             DisplayText(value);

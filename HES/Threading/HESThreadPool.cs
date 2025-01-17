@@ -15,7 +15,7 @@ namespace HES
     class HESThreadPool<T>
     {
         Thread[] workers;
-        private const int _SLEEPTIME = 50;
+        private const int _SLEEPTIME = 100;
         Object lockObj = new Object();
         private List<VKObjectContainer> data;
 

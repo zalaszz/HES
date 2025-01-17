@@ -15,7 +15,7 @@ namespace HES.Menus
         {
             base.Start();
 
-            if (GetMenuFieldContainer().CountAllFields() <= 0)
+            if (GetMenuFieldContainer().CountAllFields() <= 0) // This ensures the menu doesn't repeatedly fetch window data every time it reloads, improving efficiency
             {
                 SetAllFieldsValues(SetAllFieldsValuesImpl);
             }
