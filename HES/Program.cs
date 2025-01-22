@@ -4,12 +4,8 @@
 */
 
 /*
-    Character & quebra a linha e causa disrupção no envio das keys
-    ResourceManager GetInstance must only execute after resources are complete loading
-    ReadCSV must accept either file extension or filename (with extension)
-    Criar CSVDTO e separar a classe MenuFields do MenuDTO e add campo Value
-    Create a CSVMenu
-*/
+    The infinite iteration has to call the getinstructions everytime in the loop because the list gets a fixed size on HESManager
+ */
 
 namespace HES
 {

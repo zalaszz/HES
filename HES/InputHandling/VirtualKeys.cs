@@ -70,6 +70,7 @@ namespace HES
         VK_X = 0x58,
         VK_Y = 0x59,
         VK_Z = 0x5A,
+        F6 = 0x75,
         F11 = 0x7A,
     }
 

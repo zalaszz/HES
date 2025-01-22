@@ -20,13 +20,11 @@ namespace HES
         {
             _WINDOW = new HESWindow();
             _WINDOWMENU = new WindowMenu();
+            Task.Run(async () => await ResourceManager.LoadResourcesAsync());
         }
 
         public void Start()
         {
-            Task.Run(async () => await ResourceManager.LoadResourcesAsync()); // This might cause an exception as MainMenu and others are dependent on it
-            //ResourceManager.LoadResources();
-
             while (true)
             {
                 try

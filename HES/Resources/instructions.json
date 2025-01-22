@@ -26,7 +26,7 @@
         "virtualkey:ENTER",
         "virtualkey:ENTER"
       ],
-      "iterations": "field:cifs"
+      "iterations": "infinite"
     },
     "virtualkey:F11",
     "virtualkey:F11"

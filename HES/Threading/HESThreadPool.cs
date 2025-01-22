@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HES.InputHandling;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ namespace HES
         private const int _SLEEPTIME = 100;
         Object lockObj = new Object();
         private List<VKObjectContainer> data;
+        private bool _isHeavyTask = false;
 
         public HESThreadPool(int numWorkers)
         {
@@ -34,17 +36,27 @@ namespace HES
                 this.workers[i].Start();
             }
 
-            LoadingMessage();
+            TaskProgress();
         }
 
-        private void LoadingMessage()
+        private void TaskProgress()
         {
             if (data.Count > 150)
+                _isHeavyTask = true;
+            
+            switch (_isHeavyTask)
             {
-                LoadingBar();
-                return;
+                case true:
+                    LoadingBar();
+                    break;
+                case false:
+                    LightTask();
+                    break;
             }
+        }
 
+        private void LightTask()
+        {
             HESConsole.Write("\nExecuting task...", ConsoleColor.DarkYellow);
         }
 
@@ -63,12 +75,26 @@ namespace HES
                     }
                 }
 
+                if (IsCancelledByUser())
+                {
+                    HESConsole.Write("\nThe task has been cancelled!", ConsoleColor.DarkRed);
+                    Console.ReadKey();
+                    break;
+                }
+
+
+
                 if (container == null)
                     break;
 
                 SendInputs.PressKey(container);
                 Task.Delay(_SLEEPTIME).Wait();
             }
+        }
+
+        private bool IsCancelledByUser()
+        {
+            return HESHook.IsInteruptShortcutPressed();
         }
 
         public void SetWorkLoad(T data)
@@ -81,6 +107,12 @@ namespace HES
             for (int i = 0; i < workers.Length; i++)
             {
                 this.workers[i].Join();
+            }
+
+            if (data.Count.Equals(0) && _isHeavyTask.Equals(false))
+            {
+                HESConsole.Write("\nThe task has been successfully completed!", ConsoleColor.Green);
+                Console.ReadKey();
             }
         }
 
@@ -98,6 +130,9 @@ namespace HES
 
             for (int i = data.Count; i >= 0; i--)
             {
+                if (IsCancelledByUser())
+                    break;
+
                 if ((i % percentagePerBar).Equals(percentageForEachTask))
                 {
                     int firstSpaceIndex = bar.ToString().IndexOf('▒');

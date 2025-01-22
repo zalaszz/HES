@@ -121,6 +121,7 @@
     <Compile Include="Common\HESConsole.cs" />
     <Compile Include="Common\HESException.cs" />
     <Compile Include="Common\HESFile.cs" />
+    <Compile Include="InputHandling\HESHook.cs" />
     <Compile Include="Manager\ResourceManager.cs" />
     <Compile Include="Converters\JsonToVKCodeConverter.cs" />
     <Compile Include="Interfaces\IResourceProvider.cs" />

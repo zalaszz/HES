@@ -1,9 +1,11 @@
-﻿using HES.Interfaces;
+﻿using HES.InputHandling;
+using HES.Interfaces;
 using HES.Menus.Fields;
 using HES.Models;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 /**
 * Author: Ricardo Silva
@@ -54,8 +56,32 @@ namespace HES
 
             int numIterations = GetIterationsFromJsonProperty(fields, item);
 
-            for (int i = 0; i < numIterations; i++)
+            if (numIterations.Equals(-1)) 
             {
+                Task.Run(async () => {
+                    await IterateThroughLoopItemsAsync(loop, fields, numIterations);
+                });
+                return;
+            }
+
+            IterateThroughLoopItems(loop, fields, numIterations);
+        }
+
+        private async Task IterateThroughLoopItemsAsync(JsonElement loop, MenuFieldsContainer fields, int numIterations)
+        {
+            await Task.Run(() => IterateThroughLoopItems(loop, fields, numIterations));
+        }
+
+        private void IterateThroughLoopItems(JsonElement loop, MenuFieldsContainer fields, int numIterations)
+        {
+            for (int i = 0; numIterations.Equals(-1) ? true : i < numIterations; i++) // If numIterations equals -1, the loop will run indefinitely.
+            {
+                if (HESHook.IsInteruptShortcutPressed()) // Stop the loop if cancelled by the user
+                {
+                    finalInstructions.Clear();
+                    return;
+                }
+
                 foreach (var loopItem in loop.EnumerateArray())
                 {
                     string loopItemValue = loopItem.GetString();
@@ -79,8 +105,10 @@ namespace HES
 
                 if (int.TryParse(iterationsPropValue, out int parsedIteration))
                     numIterations = parsedIteration;
-                else if (iterationsPropValue.Contains(_FIELD_IDENTIFIER) && field.IsMultiType())
+                else if (iterationsPropValue.Contains(_FIELD_IDENTIFIER) && field.IsMultiType()) // We can only use multitype fields as values for the iterations property
                     numIterations = (field.GetValue() as List<string>).Count;
+                else if (iterationsPropValue.ToLower().Equals("infinite"))
+                    numIterations = -1;
             }
 
             return numIterations;
