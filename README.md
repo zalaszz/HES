@@ -5,10 +5,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/language-C%23-blue.svg" />
-  <img src="https://img.shields.io/badge/platform-Windows-lightgrey.svg" />
-  <img src="https://img.shields.io/badge/.NET-blue" />
+  <img src="https://img.shields.io/badge/language-C%23-blue.svg?color=rgb(170%2C%2069%2C%20145)" />
+  <img src="https://img.shields.io/badge/platform-Windows-lightgrey.svg?color=blue" />
+  <img src="https://img.shields.io/badge/.NET-blue?color=green" />
   <img src="https://img.shields.io/github/issues/zalaszz/HES" />
+  <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/zalaszz/HES/total?color=green">
   <img src="https://img.shields.io/github/v/release/zalaszz/HES" />
 </p>
 
