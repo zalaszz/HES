@@ -117,14 +117,12 @@ namespace HES
                     vKObject.Add((char)SpecialChars[c], 0, true);
                     continue;
                 }
-
-                if (SpecialShiftChars.ContainsKey(c))
+                else if (SpecialShiftChars.ContainsKey(c))
                 {
                     vKObject.Add((char)SpecialShiftChars[c], VK_CODE.LSHIFT, true);
                     continue;
                 }
-
-                if (SpecialAltChars.ContainsKey(c))
+                else if (SpecialAltChars.ContainsKey(c))
                 {
                     vKObject.Add((char)SpecialAltChars[c], VK_CODE.RALT, true);
                     continue;

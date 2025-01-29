@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace HES.InputHandling
 {
@@ -9,8 +10,14 @@ namespace HES.InputHandling
 
         public static bool IsInteruptShortcutPressed()
         {
-            // Checks if F6 has been pressed with bitwise
-            return ((GetAsyncKeyState(VirtualKeys.ConvertVKToUshort(VK_CODE.F6)) & 0x8000) != 0) ? true : false;
+            return IsShortcutPressed(VK_CODE.F6);
+        }
+
+        private static bool IsShortcutPressed(params VK_CODE[] vkcode)
+        {
+            return vkcode
+                .ToList()
+                .All(vk => (GetAsyncKeyState(VirtualKeys.ConvertVKToUshort(vk)) & 0x8000) != 0); // Checks if the key has been pressed with bitwise
         }
     }
 }
