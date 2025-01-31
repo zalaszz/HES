@@ -16,7 +16,7 @@
     <AssemblyVersion>1.0.*</AssemblyVersion>
     <FileVersion>1.0.*</FileVersion>
     <Deterministic>false</Deterministic>
-    <PublishUrl>C:\Users\Ricardo\Downloads\HES-1.2.7.10\HES\HES\publish\</PublishUrl>
+    <PublishUrl>Y:\HES\publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>

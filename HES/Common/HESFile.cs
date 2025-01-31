@@ -65,7 +65,7 @@ namespace HES
             }
             finally
             {
-                //File.Move($"{file}", $"{outPath}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
+                File.Move($"{file}", $"{outPath}data_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv.out");
             }
 
             return dto;
