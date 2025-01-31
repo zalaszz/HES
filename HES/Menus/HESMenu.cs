@@ -120,6 +120,9 @@ namespace HES
                     case FieldType.Date:
                         field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl));
                         break;
+                    case FieldType.MultiDate:
+                        field.SetValue(InterceptUserKeystrokes(TtoCurrentDateImpl).Split(' ').ToList());
+                        break;
                     case FieldType.Hidden:
                         field.SetValue(InterceptUserKeystrokes(HideCredentialsImpl));
                         break;

@@ -55,7 +55,7 @@ namespace HES.Menus.Fields
             if (!IsMultiType() && !string.IsNullOrEmpty(value)) return value;
             else if (IsMultiType() && multiValues != null && multiValues.Count > 0) return multiValues;
 
-            throw new HESException("Value appears to be empty...");
+            throw new HESException($"{name} field value appears to be empty...");
         }
 
         public bool IsMultiType()
