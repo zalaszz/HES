@@ -22,6 +22,7 @@ namespace HES.Menus.Fields
         Number,
         MultiNumber,
         Date,
+        MultiDate,
         Hidden
     }
 
@@ -59,7 +60,9 @@ namespace HES.Menus.Fields
 
         public bool IsMultiType()
         {
-            return type.Equals(FieldType.MultiNumber) || type.Equals(FieldType.MultiText) ? true : false;
+            return type.Equals(FieldType.MultiNumber) 
+                || type.Equals(FieldType.MultiText) 
+                || type.Equals(FieldType.MultiDate) ? true : false;
         }
 
         [Obsolete("GetValue<T> is deprecated use GetValue() instead.")]

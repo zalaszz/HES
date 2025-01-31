@@ -16,16 +16,22 @@
 
 # Features
 
-- [🚀 Overview](#-overview)
-- [💻 Requirements](#-requirements)
-- [⚡ Installation](#-installation)
-- [🌐 Support for Other Platforms](#-support-for-other-platforms)
-- [🔧 How to use](#-how-to-use)
-  - [Virtual Keys Mapping and Configuration](#virtual-keys-mapping-and-configuration)
-  - [Configuration in Settings File](#configuration-in-settings-file)
-  - [JSON Configuration for Menu Fields](#json-configuration-for-menu-fields)
-  - [Instructions and Loops](#instructions-and-loops)
-  - [CSV File Usage](#csv-file-usage)
+- [Features](#features)
+  - [🚀 Overview](#-overview)
+  - [💻 Requirements](#-requirements)
+  - [⚡ Installation](#-installation)
+    - [1. Clone the repository](#1-clone-the-repository)
+    - [2. Navigate to the project folder](#2-navigate-to-the-project-folder)
+    - [3. Restore dependencies](#3-restore-dependencies)
+    - [4. Build the project](#4-build-the-project)
+    - [5. Run the application](#5-run-the-application)
+  - [🌐 Support for Other Platforms](#-support-for-other-platforms)
+  - [🔧 How To Use](#-how-to-use)
+    - [Virtual Keys Mapping and Configuration](#virtual-keys-mapping-and-configuration)
+    - [Configuration in Settings File](#configuration-in-settings-file)
+    - [JSON Configuration for Menu Fields](#json-configuration-for-menu-fields)
+    - [Instructions and Loops](#instructions-and-loops)
+    - [CSV File Usage](#csv-file-usage)
 
 ## 🚀 Overview
 
@@ -190,7 +196,10 @@ The `menu.json` file (located in the `Resources/` directory) allows you to speci
 |Number	| A numerical input field (only numbers)|
 |MultiNumber | A multi-number input field (accepts multiple numbers separated by space)|
 |Date |	A date input field (typically for selecting a date)|
+|MultiDate |	A multi-date input field (accepts multiple dates separated by space)|
 |Hidden |	A hidden input field (usually for passwords)|
+
+The **multi** type fields were created to be used in the `instructions.json` file under the `iterations` section, formatted as `field:<field_name>`.
 
 Example configuration:
 

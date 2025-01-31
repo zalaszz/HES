@@ -16,11 +16,11 @@
     },
     {
       "name": "start date",
-      "type": "date"
+      "type": "multidate"
     },
     {
       "name": "end date",
-      "type": "date"
+      "type": "multidate"
     }
   ]
 }
